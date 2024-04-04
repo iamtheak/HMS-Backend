@@ -11,7 +11,7 @@ const { createUser } = require('../controllers/signup.controller');
  *     User:
  *       $ref: '#/components/schemas/User'
  *
- * api/signup:
+ * /api/signup:
  *   post:
  *      tags:
  *        - UserSignup
