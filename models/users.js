@@ -16,6 +16,7 @@ const Schema = mongoose.Schema;
  *         - phone
  *         - citizenshipNo
  *         - password
+ *         - dateOfBirth
  *       properties:
  *         username:
  *           type: string
