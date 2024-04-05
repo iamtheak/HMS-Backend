@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const routes = require('./routes/index.routes');
+const cors = require("cors")
 dotenv.config();
 
 // Middleware
@@ -34,8 +35,10 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Database Connected!!!"))
     .catch(err => console.error("Database Connection Error:", err.message));
 
+app.use(cors());
 // Routes
 app.use('/api', routes); // Mounting routes
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
