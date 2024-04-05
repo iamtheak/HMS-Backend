@@ -13,14 +13,14 @@ const dependencies = [
 
 dependencies.forEach(dependency => {
   try {
-    // Check if the dependency is installed
-    execSync("npm list ${dependency}");
-    console.log("${dependency} is already installed.");
+    // check if the dependency is installed
+    execSync(`npm list ${dependency}`);
+    console.log(`${dependency} is already installed.`);
   } catch (error) {
-    // If not installed, install the dependency
-    console.log("Installing ${dependency}...");
-    execSync("npm install ${dependency}");
-    console.log("${dependency} installed successfully.");
+    // if not installed, install the dependency
+    console.log(`Installing ${dependency}...`);
+    execSync(`npm install ${dependency}`);
+    console.log(`${dependency} installed successfully.`);
   }
 });
 
