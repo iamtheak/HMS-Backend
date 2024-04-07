@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const roomController = require('../controllers/room.controller');
+const roomController = require('../controllers/room.Controller');
 
 /**
  * @swagger
@@ -44,7 +44,7 @@ const roomController = require('../controllers/room.controller');
  *       '500':
  *         description: Internal server error
  */
-router.get("/rooms", roomController.getAllRooms);
+router.get("/rooms/:id?", roomController.getAllRooms);
 
 /**
  * @swagger

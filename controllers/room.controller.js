@@ -4,11 +4,18 @@ const jwt = require('../jwt')
 // Controller actions
 exports.getAllRooms = async (req, res) => {
     try {
-
-        
-        
-        const rooms = await Room.find();
-        res.json({ message: "All Rooms", rooms: rooms });
+        if (req.params.id) {
+            // If ID is provided, retrieve a single room by ID
+            const room = await Room.findById(req.params.id);
+            if (!room) {
+                return res.status(404).json({ message: 'Room not found' });
+            }
+            res.json({ message: 'Room details retrieved successfully', room });
+        } else {
+            // If no ID is provided, retrieve all rooms
+            const rooms = await Room.find();
+            res.json({ message: "All Rooms", rooms: rooms });
+        }
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -48,8 +55,6 @@ exports.createRoom = async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 };
-
-
 
 exports.updateRoom = async (req, res) => {
     try {
