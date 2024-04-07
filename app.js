@@ -6,8 +6,8 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-const routes = require('./routes/index.routes');
-const cors = require("cors")
+const cors = require("cors");
+const routes = require('./routes/index.routes'); // Importing index routes
 dotenv.config();
 
 // Middleware
@@ -23,6 +23,15 @@ const swaggerOptions = {
         version: '1.0.0',
         description: 'API for a hostel management system "HostelStays"',
       },
+      components:{
+        securitySchemes:{ 
+          bearerAuth: {
+            type : 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT'
+          }
+        }
+      }
     },
     apis: ['./routes/*.js', './models/*.js'], // Path to the files containing your route definitions
 };
@@ -36,9 +45,9 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(err => console.error("Database Connection Error:", err.message));
 
 app.use(cors());
-// Routes
-app.use('/api', routes); // Mounting routes
 
+// Routes
+app.use('/api', routes); // Mounting index routes
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

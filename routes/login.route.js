@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { login } = require("../controllers/loginAuth");
+const { login } = require("../controllers/login.controller");
 
 
 /**
@@ -9,7 +9,7 @@ const { login } = require("../controllers/loginAuth");
  * /api/login:
  *   post:
  *      tags:
- *        - UserLogin
+ *        - Auth
  *      summary: Login user
  *      description:  Login for new user
  *      requestBody:

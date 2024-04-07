@@ -8,7 +8,8 @@ const dependencies = [
   'morgan',
   'body-parser',
   'dotenv',
-  'cors'
+  'cors',
+  'jsonwebtoken'
 ];
 
 dependencies.forEach(dependency => {

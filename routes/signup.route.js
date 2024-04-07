@@ -14,7 +14,7 @@ const { createUser } = require('../controllers/signup.controller');
  * /api/signup:
  *   post:
  *      tags:
- *        - UserSignup
+ *        - Auth
  *      summary: Create a new user
  *      description: Endpoint to create a new user
  *      requestBody:
