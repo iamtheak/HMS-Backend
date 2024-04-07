@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-// const { getUsers, createUser } = require('../controllers/auth.controller'); // GET
 const { createUserValidator } = require('../validators/signup.validator');
 const { createUser } = require('../controllers/signup.controller');
 
@@ -29,8 +28,6 @@ const { createUser } = require('../controllers/signup.controller');
  *          '400':
  *              description: Bad request
  */
-
-// router.get('/', getUsers);
 
 // POST route for user signup
 router.post('/signup', createUserValidator, createUser);
