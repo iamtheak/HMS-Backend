@@ -21,10 +21,6 @@ const Schema = mongoose.Schema;
  *           type: string
  *           description: User's username
  *           default: admin
- *         role:
- *           type: string
- *           description: User's role
- *           default: Admin
  *         firstName:
  *           type: string
  *           description: User's first name
