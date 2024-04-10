@@ -18,8 +18,6 @@ const staffController = require('../controllers/staff.controller');
  *       type: object
  *       required:
  *         - username
- *         - staffId
- *         - role
  *         - firstName
  *         - middleName
  *         - lastName
@@ -31,12 +29,6 @@ const staffController = require('../controllers/staff.controller');
  *         username:
  *           type: string
  *           description: Staff's username
- *         staffId:
- *           type: integer
- *           description: Unique identifier for the Staff.
- *         role:
- *           type: string
- *           description: Staff's role
  *         firstName:
  *           type: string
  *           description: Staff's first name

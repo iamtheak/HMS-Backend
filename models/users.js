@@ -9,7 +9,6 @@ const Schema = mongoose.Schema;
  *       type: object
  *       required:
  *         - username
- *         - role
  *         - firstName
  *         - lastName
  *         - email
@@ -22,10 +21,6 @@ const Schema = mongoose.Schema;
  *           type: string
  *           description: User's username
  *           default: christie19
- *         role:
- *           type: string
- *           description: User's role
- *           default: Resident
  *         firstName:
  *           type: string
  *           description: User's first name
