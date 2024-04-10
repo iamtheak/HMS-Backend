@@ -9,7 +9,6 @@ const Schema = mongoose.Schema;
  *       type: object
  *       required:
  *         - username
- *         - role
  *         - firstName
  *         - lastName
  *         - email
@@ -21,47 +20,43 @@ const Schema = mongoose.Schema;
  *         username:
  *           type: string
  *           description: User's username
- *           default: christie19
- *         role:
- *           type: string
- *           description: User's role
- *           default: Resident
+ *           default: admin
  *         firstName:
  *           type: string
  *           description: User's first name
- *           default: Christie
+ *           default: Admin
  *         middleName:
  *           type: string
  *           description: User's middle name
- *           default: Jane
+ *           default: null
  *         lastName:
  *           type: string
  *           description: User's last name
- *           default: Smith
+ *           default: Admin
  *         email:
  *           type: string
  *           description: User's email address
- *           default: jsmith@gmail.com
+ *           default: admin@example.com
  *         phone:
  *           type: number
  *           description: User's phone number
- *           default: 982345678
+ *           default: 9876543210
  *         citizenshipNo:
  *           type: string
  *           description: User's citizenship number
- *           default: 12-122-23456
+ *           default: 12-345-6789
  *         password:
  *           type: string
  *           description: User's password
- *           default: Ajahdfjhgd@123
+ *           default: Admin@123
  *         dateOfBirth:
  *           type: string
  *           format: date
  *           description: User's date of birth
- *           default: 2002-01-11
+ *           default: 2000-01-01
  */
 
-// define User schema
+// Define User schema
 const userSchema = new Schema({
   username: { 
     type: String, 
@@ -123,6 +118,36 @@ const userSchema = new Schema({
 {collection:"Users"}
 );
 
-// create and export User model based on the schema
+// Create and export User model based on the schema
 const User = mongoose.model('User', userSchema);
+
+// Function to insert admin detail into the database by default
+async function insertAdminDetail() {
+  try {
+    const adminExists = await User.findOne({ role: "Admin" });
+    if (!adminExists) {
+      const admin = new User({
+        username: "admin",
+        role: "Admin",
+        firstName: "Admin",
+        lastName: "Admin",
+        email: "admin@gmail.com",
+        phone: 9876543210,
+        citizenshipNo: "12-345-6789",
+        password: "admin123",
+        dateOfBirth: "2000-01-01"
+      });
+      await admin.save();
+      console.log("Admin detail inserted successfully.");
+    } else {
+      console.log("Admin already exists in the database.");
+    }
+  } catch (error) {
+    console.error("Error inserting admin detail:", error);
+  }
+}
+
+// Call the function to insert admin detail.
+insertAdminDetail();
+
 module.exports = User;
