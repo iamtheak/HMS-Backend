@@ -9,7 +9,6 @@ const staffSchema = new mongoose.Schema({
     },
     staffId: {
         type: Number,
-        unique: true,
         required: true
     },
     role: {

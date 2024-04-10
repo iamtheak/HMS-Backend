@@ -115,6 +115,10 @@ const userSchema = new Schema({
     type: Date,
     default: null
   },  
+  staffId: {
+    type: Number,
+    default: null
+  }, 
 },
 {collection:"Users"}
 );
