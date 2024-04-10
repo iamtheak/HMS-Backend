@@ -20,11 +20,9 @@ const Schema = mongoose.Schema;
  *         username:
  *           type: string
  *           description: User's username
- *           default: admin
  *         firstName:
  *           type: string
  *           description: User's first name
- *           default: Admin
  *         middleName:
  *           type: string
  *           description: User's middle name
@@ -32,28 +30,26 @@ const Schema = mongoose.Schema;
  *         lastName:
  *           type: string
  *           description: User's last name
- *           default: Admin
  *         email:
  *           type: string
  *           description: User's email address
- *           default: admin@example.com
+ *           default: abc@example.com
  *         phone:
  *           type: number
  *           description: User's phone number
- *           default: 9876543210
+ *           default: 0
  *         citizenshipNo:
  *           type: string
  *           description: User's citizenship number
- *           default: 12-345-6789
+ *           default: 00-00-00-00000
  *         password:
  *           type: string
  *           description: User's password
- *           default: Admin@123
  *         dateOfBirth:
  *           type: string
  *           format: date
  *           description: User's date of birth
- *           default: 2000-01-01
+ *           default: 0000-00-00
  */
 
 // Define User schema

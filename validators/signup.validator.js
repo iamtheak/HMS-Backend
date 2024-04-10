@@ -21,19 +21,6 @@ const createUserSchema = checkSchema({
       },
     },
   },
-  role: {
-    notEmpty: {
-      errorMessage: 'Role is required',
-    },
-    custom: {
-      options: (value, { req }) => {
-        if (value !== 'Resident') {
-          return Promise.reject('You can only sign up as a "Resident"');
-        }
-        return Promise.resolve();
-      },
-    },
-  },
   firstName: {
     notEmpty: {
       errorMessage: 'First name is required',

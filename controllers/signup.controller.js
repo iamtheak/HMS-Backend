@@ -3,12 +3,12 @@ const User = require('../models/users');
 exports.createUser = async (req, res) => {
     try {
         // extract user data from the request body
-        const { username, role, firstName, middleName,lastName, email, phone, citizenshipNo, password, dateOfBirth,staffId } = req.body;
+        const { username, firstName, middleName,lastName, email, phone, citizenshipNo, password, dateOfBirth,staffId } = req.body;
 
         // create a new user instance using the User model
         const newUser = new User({
             username,
-            role,
+            role: "Resident",
             firstName,
             middleName,
             lastName,

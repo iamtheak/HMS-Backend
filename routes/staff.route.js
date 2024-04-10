@@ -35,18 +35,21 @@ const staffController = require('../controllers/staff.controller');
  *         middleName:
  *           type: string
  *           description: Staff's middle name
+ *           default: null
  *         lastName:
  *           type: string
  *           description: Staff's last name
  *         email:
  *           type: string
  *           description: Staff's email address
+ *           default: abc@example.com
  *         phone:
  *           type: number
  *           description: Staff's phone number
  *         citizenshipNo:
  *           type: string
  *           description: Staff's citizenship number
+ *           default: 00-00-00-00000
  *         password:
  *           type: string
  *           description: Staff's password
