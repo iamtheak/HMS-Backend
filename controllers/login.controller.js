@@ -1,5 +1,5 @@
+const { generateToken } = require("../jwt");
 const User = require("../models/login");
-const { generateToken } = require("../jwt"); // Import generateToken function
 
 exports.login = async (req, res) => {
     try {
@@ -22,12 +22,17 @@ exports.login = async (req, res) => {
         }
 
         // If email and password match, generate a JWT token
-        const token = generateToken({ email: user.email });
+        const tokenPayload = {
+            email: user.email,
+            username: user.username,
+            role: user.role
+        };
+        const token = generateToken(tokenPayload);
 
         // Send the token in response
         res.status(200).json({
             message: "Login successful",
-            token: token // Send the generated token in the response
+            token: token
         });
     } catch (error) {
         console.error("Error:", error);

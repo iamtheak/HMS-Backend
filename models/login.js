@@ -23,22 +23,28 @@ const Schema = mongoose.Schema;
  */
 
 const userSchema = new Schema({
-    
-    email: {
+  username: {
+      type: String,
+      required: true,
+      unique: true
+  },
+  role: {
+      type: String,
+      required: true,
+      default: "Resident"
+  },
+  email: {
       type: String,
       required: true,
       unique: true,
       maxlength: 50
-    },
-    password: {
+  },
+  password: {
       type: String,
       required: true,
       maxlength: 255
-    }
-  },
-  {collection:"Users"}
-  );
-  
-  // create and export User model based on the schema
-  const Login = mongoose.model('Login', userSchema);
-  module.exports = Login;
+  }
+}, { collection: "Users" });
+
+const Login = mongoose.model('Login', userSchema);
+module.exports = Login;
