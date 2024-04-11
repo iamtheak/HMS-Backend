@@ -101,7 +101,7 @@ exports.updateStaff = async (req, res) => {
         }
 
         // find the staff by staffId
-        const staff = await Staff.findById(req.params.staffId);
+        const staff = await Staff.findOne({ staffId: parseInt(staffId) });
         if (!staff) {
             return res.status(404).json({ message: 'Staff not found' });
         }

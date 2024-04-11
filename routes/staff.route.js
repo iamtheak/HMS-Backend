@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const staffController = require('../controllers/staff.controller');
+const { updateStaffValidator } = require('../validators/staff.validator');
 
 /**
  * @swagger
@@ -140,7 +141,7 @@ router.post("/staffs", staffController.addStaff);
  *       '400':
  *         description: Bad request
  */
-router.put("/staffs/:staffId", staffController.updateStaff);
+router.put("/staffs/:staffId", updateStaffValidator, staffController.updateStaff);
 
 /**
  * @swagger
