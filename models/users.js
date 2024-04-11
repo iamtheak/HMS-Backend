@@ -86,10 +86,8 @@ const userSchema = new Schema({
     maxlength: 50
   },
   phone: {
-    type: Number,
-    required: true,
-    min: 9700000000,
-    max: 9899999999
+    type: String,
+    required: true
   },
   citizenshipNo: {
     type: String,
@@ -104,7 +102,7 @@ const userSchema = new Schema({
   },
   dateOfBirth: {
     type: Date,
-    default: null
+    required: true
   },  
   staffId: {
     type: Number,

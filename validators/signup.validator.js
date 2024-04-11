@@ -1,5 +1,5 @@
 const { checkSchema, validationResult } = require('express-validator');
-const User = require('../models/users'); // Import your User model
+const User = require('../models/users');
 
 // define validation schema using checkSchema()
 const createUserSchema = checkSchema({
@@ -10,6 +10,11 @@ const createUserSchema = checkSchema({
     isLength: {
       options: { min: 4, max: 20 },
       errorMessage: 'Username must be between 4 to 20 characters',
+    },
+    // allows lowercase letters, numbers, underscores, and periods
+    matches: {
+      options: [/^[a-z0-9._]+$/],
+      errorMessage: 'Username must not have capital letters or spaces, can only have small letters, numbers, underscore, and fullstop',
     },
     custom: {
       options: (value, { req }) => {
@@ -25,16 +30,47 @@ const createUserSchema = checkSchema({
     notEmpty: {
       errorMessage: 'First name is required',
     },
+    // starts with a capital letter followed by lowercase letters
+    matches: {
+      options: [/^[A-Z][a-z]+$/],
+      errorMessage: 'First name must start with a capital letter followed by small letters',
+    },
+    isLength: {
+      options: { max: 20 },
+      errorMessage: 'First name must not be longer than 20 characters',
+    },
+  },
+  middleName: {
+    optional: true,
+    // Optional, starts with a capital letter followed by lowercase letters
+    matches: {
+        options: [/^[A-Z][a-z]*$/],
+        errorMessage: 'Middle name must start with a capital letter followed by small letters',
+    },
+    isLength: {
+      options: { max: 20 },
+      errorMessage: 'Middle name must not be longer than 20 characters',
+    },
   },
   lastName: {
     notEmpty: {
       errorMessage: 'Last name is required',
+    },
+    // starts with a capital letter followed by lowercase letters
+    matches: {
+      options: [/^[A-Z][a-z]+$/],
+      errorMessage: 'Last name must start with a capital letter followed by small letters',
+    },
+    isLength: {
+      options: { max: 20 },
+      errorMessage: 'Last name must not be longer than 20 characters',
     },
   },
   email: {
     notEmpty: {
       errorMessage: 'Email is required',
     },
+    // standard email pattern
     isEmail: {
       errorMessage: 'Invalid email address',
     },
@@ -52,17 +88,20 @@ const createUserSchema = checkSchema({
     notEmpty: {
       errorMessage: 'Phone number is required',
     },
-    isNumeric: {
-      errorMessage: 'Phone number must be numeric',
+    // Phone number format: 10 digits starts with 98 or 97 followed by 8 digits
+    matches: {
+      options: [/^(98|97)[0-9]{8}$/],
+      errorMessage: 'Phone number must be in between 9700000000 to 9899999999',
     },
   },
   citizenshipNo: {
     notEmpty: {
       errorMessage: 'Citizenship number is required',
     },
-    isLength: {
-      options: { max: 20 },
-      errorMessage: 'Citizenship number must be at most 20 characters',
+    // Citizenship number format: XX-XX-XX-XXXXX
+    matches: {
+      options: [/^\d{2}-\d{2}-\d{2}-\d{5}$/],
+      errorMessage: 'Citizenship number must be in the format 00-00-00-00000',
     },
     custom: {
       options: (value, { req }) => {
@@ -78,13 +117,20 @@ const createUserSchema = checkSchema({
     notEmpty: {
       errorMessage: 'Password is required',
     },
+    // At least one letter and one number, 8 or more characters
     isLength: {
       options: { min: 8, max: 255 },
       errorMessage: 'Password must be between 8 to 255 characters',
     },
+    matches: {
+      options: [/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/],
+      errorMessage: 'Password must contain at least one letter and one number',
+    },
   },
   dateOfBirth: {
-    optional: true, // This field is optional
+    notEmpty: {
+      errorMessage: 'Date of Birth is required',
+    },
     isISO8601: {
       errorMessage: 'Invalid date format (YYYY-MM-DD)',
     },

@@ -8,10 +8,10 @@ const updateStaffSchema = checkSchema({
             options: { min: 4, max: 20 },
             errorMessage: 'Username must be between 4 to 20 characters',
         },
-        // Username regex: small letters, numbers, underscore, and full stop
+        // allows lowercase letters, numbers, underscores, and periods
         matches: {
             options: [/^[a-z0-9._]+$/],
-            errorMessage: 'Username must contain only small letters, numbers, underscore, and full stop with no spaces in between',
+            errorMessage: 'Username must not have capital letters or spaces, can only have small letters, numbers, underscore, and fullstop',
         },
         custom: {
             options: async (value, { req }) => {
@@ -25,10 +25,10 @@ const updateStaffSchema = checkSchema({
     },
     firstName: {
         optional: true,
-        // First letter capital, others small
+        // starts with a capital letter followed by lowercase letters
         matches: {
             options: [/^[A-Z][a-z]*$/],
-            errorMessage: 'First name must start with a capital letter and all other letters must be small',
+            errorMessage: 'First name must start with a capital letter followed by small letters',
         },
         isLength: {
             options: { max: 20 },
@@ -37,10 +37,10 @@ const updateStaffSchema = checkSchema({
     },
     middleName: {
         optional: true,
-        // First letter capital, others small
+        // starts with a capital letter followed by lowercase letters
         matches: {
             options: [/^[A-Z][a-z]*$/],
-            errorMessage: 'Middle name must start with a capital letter and all other letters must be small',
+            errorMessage: 'Middle name must start with a capital letter followed by small letters',
         },
         isLength: {
             options: { max: 20 },
@@ -49,10 +49,10 @@ const updateStaffSchema = checkSchema({
     },
     lastName: {
         optional: true,
-        // First letter capital, others small
+        // starts with a capital letter followed by lowercase letters
         matches: {
             options: [/^[A-Z][a-z]*$/],
-            errorMessage: 'Last name must start with a capital letter and all other letters must be small',
+            errorMessage: 'Last name must start with a capital letter followed by small letters',
         },
         isLength: {
             options: { max: 20 },
@@ -61,13 +61,9 @@ const updateStaffSchema = checkSchema({
     },
     email: {
         optional: true,
+        // standard email pattern
         isEmail: {
             errorMessage: 'Invalid email address',
-        },
-        // Standard email regex
-        matches: {
-            options: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/],
-            errorMessage: 'Email must be in a valid format',
         },
         custom: {
             options: async (value, { req }) => {
@@ -89,7 +85,7 @@ const updateStaffSchema = checkSchema({
     },
     citizenshipNo: {
         optional: true,
-        // Citizenship number format
+        // Citizenship number format: XX-XX-XX-XXXXX
         matches: {
             options: [/^\d{2}-\d{2}-\d{2}-\d{5}$/],
             errorMessage: 'Citizenship number must be in the format 00-00-00-00000',
@@ -106,12 +102,12 @@ const updateStaffSchema = checkSchema({
     },
     password: {
         optional: true,
+        // At least one letter and one number, 8 or more characters
         isLength: {
             options: { min: 8, max: 255 },
             errorMessage: 'Password must be between 8 to 255 characters',
         },
         matches: {
-            // Password: At least one letter and one number.
             options: [/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/],
             errorMessage: 'Password must contain at least one letter and one number',
         },
