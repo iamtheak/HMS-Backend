@@ -41,7 +41,7 @@ const createUserSchema = checkSchema({
     },
   },
   middleName: {
-    optional: true,
+    optional: { options: { nullable: true } },
     // Optional, starts with a capital letter followed by lowercase letters
     matches: {
         options: [/^[A-Z][a-z]*$/],
@@ -51,6 +51,7 @@ const createUserSchema = checkSchema({
       options: { max: 20 },
       errorMessage: 'Middle name must not be longer than 20 characters',
     },
+    trim: true,
   },
   lastName: {
     notEmpty: {
