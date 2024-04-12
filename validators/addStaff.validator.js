@@ -1,8 +1,8 @@
 const { checkSchema, validationResult } = require('express-validator');
-const User = require('../models/users');
+const Staff = require('../models/staffs');
 
 // define validation schema using checkSchema()
-const createUserSchema = checkSchema({
+const createStaffSchema = checkSchema({
   username: {
     notEmpty: {
       errorMessage: 'Username is required',
@@ -18,8 +18,8 @@ const createUserSchema = checkSchema({
     },
     custom: {
       options: (value, { req }) => {
-        return User.findOne({ username: value }).then(user => {
-          if (user) {
+        return Staff.findOne({ username: value }).then(staff => {
+          if (staff) {
             return Promise.reject('Username already exists');
           }
         });
@@ -77,8 +77,8 @@ const createUserSchema = checkSchema({
     },
     custom: {
       options: (value, { req }) => {
-        return User.findOne({ email: value }).then(user => {
-          if (user) {
+        return Staff.findOne({ email: value }).then(staff => {
+          if (staff) {
             return Promise.reject('Email already exists');
           }
         });
@@ -106,8 +106,8 @@ const createUserSchema = checkSchema({
     },
     custom: {
       options: (value, { req }) => {
-        return User.findOne({ citizenshipNo: value }).then(user => {
-          if (user) {
+        return Staff.findOne({ citizenshipNo: value }).then(staff => {
+          if (staff) {
             return Promise.reject('Citizenship number already exists');
           }
         });
@@ -121,23 +121,15 @@ const createUserSchema = checkSchema({
     // At least one letter and one number, 8 or more characters 
     // and may include special characters like !@#$%^&*()_+-=[]{}|;:\'",.<>/?'
     matches: {
-      options: [/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,30}$/],
-      errorMessage: 'Password must be between 8 to 30 characters with at least one letter and one number',
-    },
-  },
-  dateOfBirth: {
-    notEmpty: {
-      errorMessage: 'Date of Birth is required',
-    },
-    isISO8601: {
-      errorMessage: 'Invalid date format (YYYY-MM-DD)',
+        options: [/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,30}$/],
+        errorMessage: 'Password must be between 8 to 30 characters with at least one letter and one number',
     },
   },
 });
 
 // Validation middleware using the created schema
-exports.createUserValidator = [
-  createUserSchema,
+exports.createStaffValidator = [
+    createStaffSchema,
   (req, res, next) => {
     // check for validation errors
     const errors = validationResult(req);

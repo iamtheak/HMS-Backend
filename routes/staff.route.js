@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const staffController = require('../controllers/staff.controller');
-const { updateStaffValidator } = require('../validators/staff.validator');
+const { createStaffValidator } = require('../validators/addStaff.validator');
+const { updateStaffValidator } = require('../validators/updateStaff.validator');
 
 /**
  * @swagger
@@ -112,7 +113,7 @@ router.get("/staffs/:staffId", staffController.getOneStaff);
  *       '400':
  *         description: Bad request
  */
-router.post("/staffs", staffController.addStaff);
+router.post("/staffs", createStaffValidator, staffController.addStaff);
 
 /**
  * @swagger

@@ -102,14 +102,11 @@ const updateStaffSchema = checkSchema({
     },
     password: {
         optional: true,
-        // At least one letter and one number, 8 or more characters
-        isLength: {
-            options: { min: 8, max: 255 },
-            errorMessage: 'Password must be between 8 to 255 characters',
-        },
+        // At least one letter and one number, 8 or more characters 
+        // and may include special characters like !@#$%^&*()_+-=[]{}|;:\'",.<>/?'
         matches: {
-            options: [/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/],
-            errorMessage: 'Password must contain at least one letter and one number',
+            options: [/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,30}$/],
+            errorMessage: 'Password must be between 8 to 30 characters with at least one letter and one number',
         },
     },
 });
