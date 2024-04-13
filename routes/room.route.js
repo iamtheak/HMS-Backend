@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-
 const roomController = require('../controllers/room.Controller');
+const roomValidator = require('../validators/room.validator');
 
 /**
  * @swagger
@@ -64,7 +64,7 @@ router.get("/rooms/:id?", roomController.getAllRooms);
  *       '400':
  *         description: Bad request
  */
-router.post("/rooms", roomController.createRoom);
+router.post("/rooms",  roomValidator.validateRoom, roomController.createRoom);
 
 /**
  * @swagger
