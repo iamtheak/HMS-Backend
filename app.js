@@ -16,24 +16,25 @@ app.use(bodyParser.json()); // Body parsing middleware
 
 // Swagger setup
 const swaggerOptions = {
-    definition: {
-      openapi: '3.0.0',
-      info: {
-        title: 'HostelStays Api Services',
-        version: '1.0.0',
-        description: 'API for a hostel management system "HostelStays"',
-      },
-      components:{
-        securitySchemes:{ 
-          bearerAuth: {
-            type : 'http',
-            scheme: 'bearer',
-            bearerFormat: 'JWT'
-          }
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'HostelStays Api Services',
+      version: '1.0.0',
+      description: 'API for a hostel management system "HostelStays"',
+    },
+    security: [{ bearerAuth: [] }],
+    components:{
+      securitySchemes:{ 
+        bearerAuth: {
+          type : 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
         }
       }
-    },
-    apis: ['./routes/*.js', './models/*.js'], // Path to the files containing your route definitions
+    }
+  },
+  apis: ['./routes/*.js', './models/*.js'], 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);

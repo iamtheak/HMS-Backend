@@ -25,6 +25,10 @@ exports.createRoom = async (req, res) => {
     const { roomId, price, occupancy } = req.body;
 
     try {
+         if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
+
         let newRoomId;
 
         if (!roomId) {
@@ -58,6 +62,11 @@ exports.createRoom = async (req, res) => {
 
 exports.updateRoom = async (req, res) => {
     try {
+
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
+
         const room = await Room.findById(req.params.id);
         if (!room) {
             return res.status(404).json({ message: 'Room not found' });
@@ -94,6 +103,11 @@ exports.updateRoom = async (req, res) => {
 
 exports.deleteRoom = async (req, res) => {
     try {
+
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
+
         const room = await Room.findById(req.params.id);
         if (!room) {
             return res.status(404).json({ message: 'Room not found' });

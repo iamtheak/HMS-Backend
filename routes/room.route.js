@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { jwtAuthMiddleware } = require("../jwt");
 const roomController = require('../controllers/room.Controller');
 const roomValidator = require('../validators/room.validator');
 
@@ -64,7 +65,7 @@ router.get("/rooms/:id?", roomController.getAllRooms);
  *       '400':
  *         description: Bad request
  */
-router.post("/rooms",  roomValidator.validateRoom, roomController.createRoom);
+router.post("/rooms", jwtAuthMiddleware, roomValidator.validateRoom, roomController.createRoom);
 
 /**
  * @swagger
@@ -93,7 +94,7 @@ router.post("/rooms",  roomValidator.validateRoom, roomController.createRoom);
  *       '400':
  *         description: Bad request
  */
-router.put("/rooms/:id", roomController.updateRoom);
+router.put("/rooms/:id", jwtAuthMiddleware ,roomController.updateRoom);
 
 /**
  * @swagger
@@ -116,6 +117,6 @@ router.put("/rooms/:id", roomController.updateRoom);
  *       '500':
  *         description: Internal server error
  */
-router.delete("/rooms/:id", roomController.deleteRoom);
+router.delete("/rooms/:id", jwtAuthMiddleware ,roomController.deleteRoom);
 
 module.exports = router;
