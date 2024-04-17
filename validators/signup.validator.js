@@ -71,6 +71,10 @@ const createUserSchema = checkSchema({
     notEmpty: {
       errorMessage: 'Email is required',
     },
+    // standard email pattern
+    isEmail: {
+      errorMessage: 'Invalid email address',
+    },
     custom: {
       options: (value, { req }) => {
         return User.findOne({ email: value }).then(user => {
