@@ -1,9 +1,11 @@
 const Staff = require('../models/staffs');
-const jwt = require('../jwt')
 
 // Controller action to retrieve all staffs
 exports.getAllStaffs = async (req, res) => {
     try {
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
         const staffs = await Staff.find({ role: "Staff" });
         res.json({ message: "All Staffs", staffs: staffs });
     } catch (err) {
@@ -15,6 +17,10 @@ exports.getAllStaffs = async (req, res) => {
 // Controller action to retrieve a single staff by staffID
 exports.getOneStaff = async (req, res) => {
     try {
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
+        
         const staffId = req.params.staffId;
 
         // check if staffId is entered
@@ -46,6 +52,10 @@ exports.addStaff = async (req, res) => {
     const { username, staffId, firstName, middleName, lastName, email, phone, citizenshipNo, password } = req.body;
 
     try {
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
+
         let newStaffId;
 
         if (!staffId) {
@@ -88,6 +98,10 @@ exports.addStaff = async (req, res) => {
 // Controller action to update staff details
 exports.updateStaff = async (req, res) => {
     try {
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
+
         const staffId = req.params.staffId;
 
         // check if staffId is entered
@@ -144,6 +158,10 @@ exports.updateStaff = async (req, res) => {
 // Controller action to delete a staff by staffID
 exports.deleteStaff = async (req, res) => {
     try {
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
+
         const staffId = req.params.staffId;
 
         // check if staffId is entered

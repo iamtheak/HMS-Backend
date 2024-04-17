@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+const { jwtAuthMiddleware } = require("../jwt");
 const staffController = require('../controllers/staff.controller');
 const { createStaffValidator } = require('../validators/addStaff.validator');
 const { updateStaffValidator } = require('../validators/updateStaff.validator');
@@ -69,7 +70,7 @@ const { updateStaffValidator } = require('../validators/updateStaff.validator');
  *       '500':
  *         description: Internal server error
  */
-router.get("/staffs", staffController.getAllStaffs);
+router.get("/staffs", jwtAuthMiddleware, staffController.getAllStaffs);
 
 /**
  * @swagger
@@ -92,7 +93,7 @@ router.get("/staffs", staffController.getAllStaffs);
  *       '500':
  *         description: Internal server error
  */
-router.get("/staffs/:staffId", staffController.getOneStaff);
+router.get("/staffs/:staffId", jwtAuthMiddleware, staffController.getOneStaff);
 
 
 /**
@@ -113,7 +114,7 @@ router.get("/staffs/:staffId", staffController.getOneStaff);
  *       '400':
  *         description: Bad request
  */
-router.post("/staffs", createStaffValidator, staffController.addStaff);
+router.post("/staffs", jwtAuthMiddleware, createStaffValidator, staffController.addStaff);
 
 /**
  * @swagger
@@ -142,7 +143,7 @@ router.post("/staffs", createStaffValidator, staffController.addStaff);
  *       '400':
  *         description: Bad request
  */
-router.put("/staffs/:staffId", updateStaffValidator, staffController.updateStaff);
+router.put("/staffs/:staffId", jwtAuthMiddleware, updateStaffValidator, staffController.updateStaff);
 
 /**
  * @swagger
@@ -165,6 +166,6 @@ router.put("/staffs/:staffId", updateStaffValidator, staffController.updateStaff
  *       '500':
  *         description: Internal server error
  */
-router.delete("/staffs/:staffId", staffController.deleteStaff);
+router.delete("/staffs/:staffId", jwtAuthMiddleware, staffController.deleteStaff);
 
 module.exports = router;
