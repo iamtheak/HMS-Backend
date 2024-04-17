@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { jwtAuthMiddleware } = require("../jwt");
 const roomController = require('../controllers/room.Controller');
-const roomValidator = require('../validators/room.validator');
+const roomValidator = require('../validators/addroom.validator');
+const updateRoomValidator = require('../validators/updateRoom.validator');
 
 /**
  * @swagger
@@ -18,13 +19,9 @@ const roomValidator = require('../validators/room.validator');
  *     Room:
  *       type: object
  *       required:
- *         - roomId
  *         - price
  *         - occupancy
  *       properties:
- *         roomId:
- *           type: integer
- *           description: Unique identifier for the room.
  *         price:
  *           type: number
  *           description: Price of the room.
@@ -37,15 +34,23 @@ const roomValidator = require('../validators/room.validator');
  * @swagger
  * /api/rooms:
  *   get:
- *     summary: Retrieve all rooms
+ *     summary: Retrieve all rooms or a single room by roomId
  *     tags: [Rooms]
+ *     parameters:
+ *       - in: query
+ *         name: roomId
+ *         schema:
+ *           type: integer
+ *         description: Optional. ID of the room to retrieve.
  *     responses:
  *       '200':
- *         description: A list of rooms
+ *         description: Room data retrieved successfully
+ *       '404':
+ *         description: Room not found
  *       '500':
  *         description: Internal server error
  */
-router.get("/rooms/:id?", roomController.getAllRooms);
+router.get("/rooms", roomController.getAllRooms);
 
 /**
  * @swagger
@@ -65,21 +70,21 @@ router.get("/rooms/:id?", roomController.getAllRooms);
  *       '400':
  *         description: Bad request
  */
-router.post("/rooms", jwtAuthMiddleware, roomValidator.validateRoom, roomController.createRoom);
+router.post("/rooms", jwtAuthMiddleware, roomValidator.validateCreateRoom, roomController.createRoom);
 
 /**
  * @swagger
- * /api/rooms/{id}:
+ * /api/rooms/{roomId}:
  *   put:
  *     summary: Update a room
  *     tags: [Rooms]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: roomId
  *         required: true
  *         description: ID of the room to update
  *         schema:
- *           type: string
+ *           type: integer
  *     requestBody:
  *       required: true
  *       content:
@@ -94,21 +99,21 @@ router.post("/rooms", jwtAuthMiddleware, roomValidator.validateRoom, roomControl
  *       '400':
  *         description: Bad request
  */
-router.put("/rooms/:id", jwtAuthMiddleware ,roomController.updateRoom);
+router.put("/rooms/:roomId", jwtAuthMiddleware, updateRoomValidator.validateUpdateRoom, roomController.updateRoom);
 
 /**
  * @swagger
- * /api/rooms/{id}:
+ * /api/rooms/{roomId}:
  *   delete:
  *     summary: Delete a room
  *     tags: [Rooms]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: roomId
  *         required: true
  *         description: ID of the room to delete
  *         schema:
- *           type: string
+ *           type: integer
  *     responses:
  *       '200':
  *         description: Room deleted successfully
@@ -117,6 +122,6 @@ router.put("/rooms/:id", jwtAuthMiddleware ,roomController.updateRoom);
  *       '500':
  *         description: Internal server error
  */
-router.delete("/rooms/:id", jwtAuthMiddleware ,roomController.deleteRoom);
+router.delete("/rooms/:roomId", jwtAuthMiddleware, roomController.deleteRoom);
 
 module.exports = router;

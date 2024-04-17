@@ -1,6 +1,4 @@
-// room.validator.js
-
-exports.validateRoom = (req, res, next) => {
+exports.validateCreateRoom = (req, res, next) => {
     const {price, occupancy } = req.body;
 
     // Check if all required fields are present
@@ -26,9 +24,5 @@ exports.validateRoom = (req, res, next) => {
     if (occupancy <= 0) {
         return res.status(400).json({ message: 'Occupancy must be a positive number' });
     }
-    if (occupancy > 2) {
-        return res.status(400).json({ message: 'Occupancy must not be more than 2' });
-    }
-
     next();
 };
