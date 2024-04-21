@@ -24,5 +24,8 @@ exports.validateCreateRoom = (req, res, next) => {
     if (occupancy <= 0) {
         return res.status(400).json({ message: 'Occupancy must be a positive number' });
     }
+    if (occupancy >2) {
+        return res.status(400).json({ message: 'Occupancy must not be more than 2' });
+    }
     next();
 };
