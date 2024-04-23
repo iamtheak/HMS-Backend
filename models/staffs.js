@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 // define Staff schema
 const staffSchema = new mongoose.Schema({
+    // Personal information
     username: { 
       type: String, 
       required: true, 
@@ -54,7 +55,33 @@ const staffSchema = new mongoose.Schema({
       required: true,
       maxlength: 255
     },
-},
+    joinedDate: {
+      type: Date,
+      required: true
+    },
+    
+    // Billing information
+    billing: {
+      nextPayDate: {
+        type: Date,
+        default: null
+      },
+      amount: {
+        type: Number,
+        default: null
+      },
+      pastBills: [{
+        billDate: {
+          type: Date,
+          default: null
+        },
+        amount: {
+          type: Number,
+          default: null
+        }
+      }]
+    } 
+  },
 {collection:"Users"}
 );
 

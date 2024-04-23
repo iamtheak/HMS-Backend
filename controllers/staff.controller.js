@@ -84,7 +84,8 @@ exports.addStaff = async (req, res) => {
             email, 
             phone, 
             citizenshipNo, 
-            password
+            password,
+            joinedDate: new Date() // set the joinedDate to current date
         });
 
         const newStaff = await staff.save();

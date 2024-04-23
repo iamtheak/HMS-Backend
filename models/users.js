@@ -54,6 +54,7 @@ const Schema = mongoose.Schema;
 
 // Define User schema
 const userSchema = new Schema({
+  // Personal information
   username: { 
     type: String, 
     required: true, 
@@ -112,6 +113,13 @@ const userSchema = new Schema({
     type: Date,
     required: true
   },
+
+  // Room information
+  roomId: {
+    type: Number,
+    default: null
+  },
+  
   // Billing information
   billing: {
     nextPayDate: {
@@ -122,12 +130,20 @@ const userSchema = new Schema({
       type: Number,
       default: null
     },
-    pastBills: {
+    status: {
+      type: String,
+      default: null
+    },
+    pastBills: [{
       billDate: {
         type: Date,
         default: null
+      },
+      amount: {
+        type: Number,
+        default: null
       }
-    }
+    }]
   } 
 },
 {collection:"Users"}
