@@ -107,7 +107,28 @@ const userSchema = new Schema({
   staffId: {
     type: Number,
     default: null
-  }, 
+  },
+  joinedDate: {
+    type: Date,
+    required: true
+  },
+  // Billing information
+  billing: {
+    nextPayDate: {
+      type: Date,
+      default: null
+    },
+    amount: {
+      type: Number,
+      default: null
+    },
+    pastBills: {
+      billDate: {
+        type: Date,
+        default: null
+      }
+    }
+  } 
 },
 {collection:"Users"}
 );

@@ -17,7 +17,8 @@ exports.createUser = async (req, res) => {
             citizenshipNo,
             password,
             dateOfBirth,
-            staffId
+            staffId,
+            joinedDate: new Date() // set the joinedDate to current date
         });
 
         // save the new user to the database
