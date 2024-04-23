@@ -135,7 +135,7 @@ const userSchema = new Schema({
       default: null
     },
     pastBills: [{
-      billDate: {
+      paidDate: {
         type: Date,
         default: null
       },

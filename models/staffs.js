@@ -71,7 +71,7 @@ const staffSchema = new mongoose.Schema({
         default: null
       },
       pastBills: [{
-        billDate: {
+        paidDate: {
           type: Date,
           default: null
         },

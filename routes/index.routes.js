@@ -8,6 +8,7 @@ const roomRoutes = require('./room.route');
 const staffRoutes = require('./staff.route');
 const feedbackRoutes = require('./feedback.routes');
 const billingRoute = require('./billing.route');
+const maintenanceRoute = require('./maintenance.route');
 
 
 router.use(loginRoute)
@@ -17,5 +18,7 @@ router.use(roomRoutes)
 router.use(staffRoutes)
 router.use(feedbackRoutes)
 router.use(billingRoute);
+router.use(maintenanceRoute);
+
 
 module.exports = router;

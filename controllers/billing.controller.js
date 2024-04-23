@@ -13,7 +13,7 @@ exports.getRentPayments = async (req, res) => {
       const { amount, nextPayDate, pastBills } = billing;
       
       // extracting past bill details
-      const lastPaid = pastBills.length > 0 ? pastBills[pastBills.length - 1].billDate : null;
+      const lastPaid = pastBills.length > 0 ? pastBills[pastBills.length - 1].paidDate : null;
       const status = calculateStatus(nextPayDate);
 
       return {
@@ -44,7 +44,7 @@ exports.getSalaryPayments = async (req, res) => {
         const { amount, nextPayDate, pastBills } = billing;
         
         // extracting past bill details
-        const lastPaid = pastBills.length > 0 ? pastBills[pastBills.length - 1].billDate : null;
+        const lastPaid = pastBills.length > 0 ? pastBills[pastBills.length - 1].paidDate : null;
         const status = calculateStatus(nextPayDate);
   
         return {
