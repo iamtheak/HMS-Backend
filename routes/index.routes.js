@@ -9,6 +9,7 @@ const staffRoutes = require('./staff.route');
 const feedbackRoutes = require('./feedback.routes');
 const billingRoute = require('./billing.route');
 const maintenanceRoute = require('./maintenance.route');
+const allocateRoom = require('./allocateRoom.routes');
 
 
 router.use(loginRoute)
@@ -19,6 +20,7 @@ router.use(staffRoutes)
 router.use(feedbackRoutes)
 router.use(billingRoute);
 router.use(maintenanceRoute);
+router.use(allocateRoom);
 
 
 module.exports = router;

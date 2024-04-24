@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { jwtAuthMiddleware } = require("../jwt");
-const roomController = require('../controllers/room.Controller');
+const roomController = require('../controllers/room.controller');
 const roomValidator = require('../validators/addroom.validator');
 const updateRoomValidator = require('../validators/updateRoom.validator');
 
