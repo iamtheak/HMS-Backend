@@ -11,6 +11,7 @@ const billingRoute = require('./billing.route');
 const maintenanceRoute = require('./maintenance.route');
 const allocateRoom = require('./allocateRoom.routes');
 const resetPassword = require('./resetPassword.route');
+const residentDetail = require('./resident.routes');
 
 
 router.use(loginRoute)
@@ -23,6 +24,7 @@ router.use(billingRoute);
 router.use(maintenanceRoute);
 router.use(allocateRoom);
 router.use(resetPassword);
+router.use(residentDetail)
 
 
 module.exports = router;
