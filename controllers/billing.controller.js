@@ -4,6 +4,10 @@ const Staff = require('../models/staffs');
 // Controller function to fetch rent payment details
 exports.getRentPayments = async (req, res) => {
   try {
+    if (req.user.role !== 'Admin') {
+      return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+    }
+
     // find all users and populate the billing field
     const users = await User.find({ role: 'Resident' }).populate('billing');
 
@@ -15,8 +19,9 @@ exports.getRentPayments = async (req, res) => {
       return {
         residentName: `${firstName} ${lastName}`,
         amount,
-        dueDate: formatDate(nextPayDate),
-        status
+        nextPayDate: formatDate(nextPayDate),
+        status,
+        pastBills
       };
     });
 
@@ -30,6 +35,10 @@ exports.getRentPayments = async (req, res) => {
 // Controller function to fetch salary payment details
 exports.getSalaryPayments = async (req, res) => {
     try {
+      if (req.user.role !== 'Admin') {
+        return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+      }
+
       // find all users and populate the billing field
       const users = await User.find({ role: 'Staff' }).populate('billing');
   
@@ -42,8 +51,9 @@ exports.getSalaryPayments = async (req, res) => {
           staffId: staffId,
           staffName: `${firstName} ${lastName}`,
           amount,
-          dueDate: formatDate(nextPayDate),
-          status
+          nextPayDate: formatDate(nextPayDate),
+          status,
+          pastBills
         };
       });
   
@@ -57,6 +67,10 @@ exports.getSalaryPayments = async (req, res) => {
 // Controller function to post rent payment status by username
 exports.postRentPaymentStatus = async (req, res) => {
   try {
+    if (req.user.role !== 'Admin') {
+      return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+    }
+
     const { username, newStatus } = req.body;
     console.log(username);
     // find the user by username
@@ -95,6 +109,10 @@ exports.postRentPaymentStatus = async (req, res) => {
 // Controller function to post salary payment status by staff ID
 exports.postSalaryPaymentStatus = async (req, res) => {
   try {
+    if (req.user.role !== 'Admin') {
+      return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+    }
+
     const { staffId, newStatus } = req.body;
 
     // find the staff by staffId
