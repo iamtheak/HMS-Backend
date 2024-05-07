@@ -92,11 +92,15 @@ const updateStaffSchema = checkSchema({
         },
         custom: {
             options: async (value, { req }) => {
-                const existingCitizenshipNo = await Staff.findOne({ citizenshipNo: value, StaffId: { $ne: req.params.staffId } });
-                if (existingCitizenshipNo) {
-                    throw new Error('Citizenship number already in use');
+                try {
+                    const existingCitizenshipNo = await Staff.findOne({ citizenshipNo: value, staffId: { $ne: req.params.staffId } });
+                    if (existingCitizenshipNo) {
+                        throw new Error('Citizenship number already in use');
+                    }
+                    return true;
+                } catch (error) {
+                    throw new Error('Failed to validate citizenship number');
                 }
-                return true;
             },
         },
     },
