@@ -9,6 +9,9 @@ const staffRoutes = require('./staff.route');
 const feedbackRoutes = require('./feedback.routes');
 const billingRoute = require('./billing.route');
 const maintenanceRoute = require('./maintenance.route');
+const allocateRoom = require('./allocateRoom.routes');
+const resetPassword = require('./resetPassword.route');
+const residentDetail = require('./resident.routes');
 
 
 router.use(loginRoute)
@@ -19,6 +22,9 @@ router.use(staffRoutes)
 router.use(feedbackRoutes)
 router.use(billingRoute);
 router.use(maintenanceRoute);
+router.use(allocateRoom);
+router.use(resetPassword);
+router.use(residentDetail)
 
 
 module.exports = router;

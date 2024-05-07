@@ -46,5 +46,10 @@ const userSchema = new Schema({
   }
 }, { collection: "Users" });
 
+userSchema.methods.updatePassword = async function(newPassword) {
+    this.password = newPassword;
+    await this.save();
+  };
+
 const Login = mongoose.model('Login', userSchema);
 module.exports = Login;
