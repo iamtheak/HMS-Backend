@@ -15,7 +15,7 @@ exports.getAllMaintenance = async (req, res) => {
 };
 
 // Controller action to retrieve a single maintenance by maintenanceID
-exports.getOneStaff = async (req, res) => {
+exports.getOneMaintenance = async (req, res) => {
     try {
         const maintenanceId = req.params.maintenanceId;
 
