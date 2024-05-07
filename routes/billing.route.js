@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
+const { jwtAuthMiddleware } = require("../jwt");
+
 const billingController = require('../controllers/billing.controller');
+const { rentPaymentValidator, salaryPaymentValidator } = require('../validators/updatePaymentStatus.validator');
 
 /**
  * @swagger
@@ -24,7 +27,7 @@ const billingController = require('../controllers/billing.controller');
  *         description: Internal server error
  */
 
-router.get('/billing/rent', billingController.getRentPayments);
+router.get('/billing/rent', jwtAuthMiddleware, billingController.getRentPayments);
 
 // GET route to get salary payment details
 /**
@@ -40,7 +43,7 @@ router.get('/billing/rent', billingController.getRentPayments);
  *         description: Internal server error
  */
 
-router.get('/billing/salary', billingController.getSalaryPayments);
+router.get('/billing/salary', jwtAuthMiddleware, billingController.getSalaryPayments);
 
 // POST route to update rent payment status
 /**
@@ -71,7 +74,7 @@ router.get('/billing/salary', billingController.getSalaryPayments);
  *         description: Internal server error
  */
 
-router.post('/billing/rent', billingController.postRentPaymentStatus);
+router.post('/billing/rent', jwtAuthMiddleware, rentPaymentValidator, billingController.postRentPaymentStatus);
 
 // POST route to update salary payment status
 /**
@@ -103,6 +106,6 @@ router.post('/billing/rent', billingController.postRentPaymentStatus);
  */
 
 
-router.post('/billing/salary', billingController.postSalaryPaymentStatus);
+router.post('/billing/salary', jwtAuthMiddleware, salaryPaymentValidator, billingController.postSalaryPaymentStatus);
 
 module.exports = router;

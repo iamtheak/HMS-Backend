@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const cors = require("cors");
 const routes = require('./routes/index.routes'); // Importing index routes
-const updatePaymentStatus = require('./paymentUpdater'); // Import function to auto update payment status
+const updatePaymentStatus = require('./paymentAutoUpdater'); // Import function to auto update payment status
 dotenv.config();
 
 // Middleware
