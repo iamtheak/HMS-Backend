@@ -5,6 +5,10 @@ exports.createUser = async (req, res) => {
         // extract user data from the request body
         const { username, firstName, middleName,lastName, email, phone, citizenshipNo, password, dateOfBirth,staffId } = req.body;
 
+        // calculate the nextPayDate as joinedDate + 1 month
+        const joinedDate = new Date(); // current date
+        const nextPayDate = new Date(joinedDate.getFullYear(), joinedDate.getMonth() + 1, joinedDate.getDate());
+
         // create a new user instance using the User model
         const newUser = new User({
             username,
@@ -18,7 +22,11 @@ exports.createUser = async (req, res) => {
             password,
             dateOfBirth,
             staffId,
-            joinedDate: new Date() // set the joinedDate to current date
+            joinedDate,
+            billing: {
+                nextPayDate, // set the nextPayDate as calculated
+                status: "Pending" // set status as Pending by default
+            }
         });
 
         // save the new user to the database

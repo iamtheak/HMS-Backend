@@ -73,6 +73,10 @@ exports.addStaff = async (req, res) => {
             newStaffId = staffId;
         }
 
+        // calculate the nextPayDate as joinedDate + 1 month
+        const joinedDate = new Date(); // current date
+        const nextPayDate = new Date(joinedDate.getFullYear(), joinedDate.getMonth() + 1, joinedDate.getDate());
+
         // Create a new staff
         const staff = new Staff({
             username,
@@ -85,7 +89,11 @@ exports.addStaff = async (req, res) => {
             phone, 
             citizenshipNo, 
             password,
-            joinedDate: new Date() // set the joinedDate to current date
+            joinedDate,
+            billing: {
+                nextPayDate, // set the nextPayDate as calculated
+                status: "Pending" // set status as Pending by default
+            }  
         });
 
         const newStaff = await staff.save();

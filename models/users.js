@@ -52,7 +52,7 @@ const Schema = mongoose.Schema;
  *           default: 0000-00-00
  */
 
-// Define User schema
+// define User schema
 const userSchema = new Schema({
   // Personal information
   username: { 
@@ -113,12 +113,6 @@ const userSchema = new Schema({
     type: Date,
     required: true
   },
-
-  // Room information
-  roomId: {
-    type: Number,
-    default: null
-  },
   
   // Billing information
   billing: {
@@ -149,10 +143,10 @@ const userSchema = new Schema({
 {collection:"Users"}
 );
 
-// Create and export User model based on the schema
+// create and export User model based on the schema
 const User = mongoose.model('User', userSchema);
 
-// Function to insert admin detail into the database by default
+// function to insert admin detail into the database by default
 async function insertAdminDetail() {
   try {
     const adminExists = await User.findOne({ role: "Admin" });
@@ -178,7 +172,7 @@ async function insertAdminDetail() {
   }
 }
 
-// Call the function to insert admin detail.
+// call the function to insert admin detail.
 insertAdminDetail();
 
 module.exports = User;
