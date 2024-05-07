@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const cors = require("cors");
 const routes = require('./routes/index.routes'); // Importing index routes
+const updatePaymentStatus = require('./paymentUpdater'); // Import function to auto update payment status
 dotenv.config();
 
 // Middleware
@@ -51,7 +52,7 @@ app.use(cors());
 app.use('/api', routes); // Mounting index routes
 
 // Function to update payment status (billing) automatically daily
-
+updatePaymentStatus();
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
