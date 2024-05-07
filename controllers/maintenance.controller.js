@@ -14,6 +14,34 @@ exports.getAllMaintenance = async (req, res) => {
     }
 };
 
+// Controller action to retrieve a single maintenance by maintenanceID
+exports.getOneStaff = async (req, res) => {
+    try {
+        const maintenanceId = req.params.maintenanceId;
+
+        // check if maintenanceId is entered
+        if (!maintenanceId) {
+            return res.status(400).json({ message: 'Maintenance ID is required' });
+        }
+
+        // check if maintenanceId is a valid number
+        if (isNaN(parseInt(maintenanceId))) {
+            return res.status(400).json({ message: 'Invalid Maintenance ID' });
+        }
+
+        // retrieve a single maintenance task by ID
+        const maintenance = await Maintenance.findOne({ maintenanceId: parseInt(maintenanceId) });
+
+        if (!maintenance) {
+            return res.status(404).json({ message: 'Maintenance task not found' });
+        }
+
+        return res.json({ message: 'Maintenance task details retrieved successfully', maintenance });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
 // Controller function to assign a new maintenance task
 exports.assignMaintenance = async (req, res) => {
     const { maintenanceId, staffId, task } = req.body;
