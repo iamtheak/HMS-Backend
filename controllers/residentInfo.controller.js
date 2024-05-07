@@ -1,8 +1,10 @@
 const Allocation = require('../models/allocateRoom.model');
 const User = require('../models/users');
 
+// Controller action to get resident information along with allocated room details
 exports.getResidentInfo = async (req, res) => {
     try {
+
         if (req.user.role !== 'Admin') {
             return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
         }
@@ -10,16 +12,17 @@ exports.getResidentInfo = async (req, res) => {
         const { username } = req.query;
 
         let query = { role: "Resident" }; // Filter to get only residents
-
+        // If a username is provided, add it to the query
         if (username) {
             query.username = username;
         }
-
+        // Find the user details
         const users = await User.find(query);
         if (users.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // Prepare resident information with allocated room details or 'Not allocated' if no allocation exists
         const residentInfo = [];
         for (const user of users) {
             const allocation = await Allocation.findOne({ username: user.username });
@@ -31,7 +34,7 @@ exports.getResidentInfo = async (req, res) => {
                     roomId: allocation.roomId,
                     firstName: user.firstName,
                     lastName: user.lastName,
-                    dateOfBirth: user.dateOfBirth
+                    dateOfBirth : user.dateOfBirth
                 });
             } else {
                 residentInfo.push({
@@ -41,7 +44,7 @@ exports.getResidentInfo = async (req, res) => {
                     roomId: 'Not allocated',
                     firstName: user.firstName,
                     lastName: user.lastName,
-                    dateOfBirth: user.dateOfBirth
+                    dateOfBirth : user.dateOfBirth
                 });
             }
         }

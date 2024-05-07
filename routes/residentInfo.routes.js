@@ -4,6 +4,7 @@ const { jwtAuthMiddleware } = require("../jwt");
 const residentController = require('../controllers/residentInfo.controller');
 const { updateResidentValidator } = require('../validators/updateResident.validator');
 
+
 /**
  * @swagger
  * tags:
@@ -113,5 +114,7 @@ router.put("/residentInfo/:username", jwtAuthMiddleware, residentController.upda
  *         description: Internal server error
  */
 router.delete("/residentInfo/:username", jwtAuthMiddleware, residentController.deleteResident);
+
+router.get("/residentInfo", jwtAuthMiddleware, residentController.getResidentInfo);
 
 module.exports = router;
