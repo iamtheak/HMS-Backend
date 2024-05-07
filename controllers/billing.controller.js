@@ -10,17 +10,12 @@ exports.getRentPayments = async (req, res) => {
     // extract rent payment details from the users
     const rentPayments = users.map(user => {
       const { firstName, lastName, billing } = user;
-      const { amount, nextPayDate, pastBills } = billing;
-      
-      // extracting past bill details
-      const lastPaid = pastBills.length > 0 ? pastBills[pastBills.length - 1].paidDate : null;
-      const status = calculateStatus(nextPayDate);
+      const { amount, nextPayDate, status, pastBills } = billing;
 
       return {
         residentName: `${firstName} ${lastName}`,
         amount,
         dueDate: formatDate(nextPayDate),
-        lastPaid: formatDate(lastPaid),
         status
       };
     });
@@ -41,18 +36,13 @@ exports.getSalaryPayments = async (req, res) => {
       // extract salary payment details from the users
       const salaryPayments = users.map(user => {
         const { staffId, firstName, lastName, billing } = user;
-        const { amount, nextPayDate, pastBills } = billing;
-        
-        // extracting past bill details
-        const lastPaid = pastBills.length > 0 ? pastBills[pastBills.length - 1].paidDate : null;
-        const status = calculateStatus(nextPayDate);
+        const { amount, nextPayDate, status, pastBills } = billing;
   
         return {
           staffId: staffId,
           staffName: `${firstName} ${lastName}`,
           amount,
           dueDate: formatDate(nextPayDate),
-          lastPaid: formatDate(lastPaid),
           status
         };
       });
@@ -62,21 +52,83 @@ exports.getSalaryPayments = async (req, res) => {
       console.error('Error fetching salary payments:', error);
       res.status(500).json({ error: 'Server error' });
     }
-  };
+};
 
-// function to calculate the status based on the due date
-function calculateStatus(nextPayDate) {
-    if (!nextPayDate) {
-        return null; // Return null if nextPayDate is null
+// Controller function to post rent payment status by username
+exports.postRentPaymentStatus = async (req, res) => {
+  try {
+    const { username, newStatus } = req.body;
+    console.log(username);
+    // find the user by username
+    const user = await User.findOne({username: username});
+    console.log(user);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
 
-    const currentDate = new Date();
-    if (nextPayDate <= currentDate) {
-        return 'Overdue';
-    } else {
-        return 'Up to date';
+    // add the amount and today's date as paidDate to pastBills
+    user.billing.pastBills.push({
+      amount: user.billing.amount,
+      paidDate: new Date()
+    });
+
+    // update the billing status
+    user.billing.status = newStatus;
+
+    // increment nextPayDate by 1 month if the status is changed to "Up-to-date"
+    if (newStatus === 'Up-to-date' && user.billing.nextPayDate) {
+      const nextPayDate = new Date(user.billing.nextPayDate);
+      nextPayDate.setMonth(nextPayDate.getMonth() + 1);
+      user.billing.nextPayDate = nextPayDate;
     }
-}
+
+    // save the updated user
+    await user.save();
+
+    res.status(200).json({ message: 'Payment status updated successfully' });
+  } catch (error) {
+    console.error('Error fetching salary payments:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// Controller function to post salary payment status by staff ID
+exports.postSalaryPaymentStatus = async (req, res) => {
+  try {
+    const { staffId, newStatus } = req.body;
+
+    // find the staff by staffId
+    const staff = await Staff.findOne({staffId: staffId});
+
+    if (!staff) {
+      return res.status(404).json({ error: 'Staff not found' });
+    }
+
+    // add the amount and today's date as paidDate to pastBills
+    staff.billing.pastBills.push({
+      amount: staff.billing.amount,
+      paidDate: new Date()
+    });
+
+    // update the billing status
+    staff.billing.status = newStatus;
+
+    // increment nextPayDate by 1 month if the status is changed to "Up-to-date"
+    if (newStatus === 'Up-to-date' && staff.billing.nextPayDate) {
+      const nextPayDate = new Date(staff.billing.nextPayDate);
+      nextPayDate.setMonth(nextPayDate.getMonth() + 1);
+      staff.billing.nextPayDate = nextPayDate;
+    }
+
+    // save the updated staff
+    await staff.save();
+
+    res.status(200).json({ message: 'Payment status updated successfully' });
+  } catch (error) {
+    console.error('Error fetching salary payments:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
 
 // function to format date as "YYYY-MM-DD"
 function formatDate(date) {

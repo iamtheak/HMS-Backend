@@ -50,6 +50,9 @@ app.use(cors());
 // Routes
 app.use('/api', routes); // Mounting index routes
 
+// Function to update payment status (billing) automatically daily
+
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`HostelStays Backend Services is listening on port: ${port}`);

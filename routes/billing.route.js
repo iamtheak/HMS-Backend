@@ -42,4 +42,67 @@ router.get('/billing/rent', billingController.getRentPayments);
 
 router.get('/billing/salary', billingController.getSalaryPayments);
 
+// POST route to update rent payment status
+/**
+ * @swagger
+ * /api/billing/rent:
+ *   post:
+ *     summary: Update rent payment status
+ *     tags: [Billing]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the user whose payment status needs to be updated
+ *               newStatus:
+ *                 type: string
+ *                 description: The new payment status ('Pending', 'Up-to-date')
+ *     responses:
+ *       '200':
+ *         description: Payment status updated successfully
+ *       '404':
+ *         description: User not found
+ *       '500':
+ *         description: Internal server error
+ */
+
+router.post('/billing/rent', billingController.postRentPaymentStatus);
+
+// POST route to update salary payment status
+/**
+ * @swagger
+ * /api/billing/salary:
+ *   post:
+ *     summary: Update salary payment status
+ *     tags: [Billing]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               staffId:
+ *                 type: number
+ *                 description: The staff ID of the user whose payment status needs to be updated
+ *               newStatus:
+ *                 type: string
+ *                 description: The new payment status ('Pending', 'Up-to-date')
+ *     responses:
+ *       '200':
+ *         description: Payment status updated successfully
+ *       '404':
+ *         description: Staff not found
+ *       '500':
+ *         description: Internal server error
+ */
+
+
+router.post('/billing/salary', billingController.postSalaryPaymentStatus);
+
 module.exports = router;
