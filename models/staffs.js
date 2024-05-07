@@ -70,6 +70,10 @@ const staffSchema = new mongoose.Schema({
         type: Number,
         default: null
       },
+      status: {
+        type: String,
+        default: null
+      },
       pastBills: [{
         paidDate: {
           type: Date,
