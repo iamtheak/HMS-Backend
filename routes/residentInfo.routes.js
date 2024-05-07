@@ -1,21 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const { jwtAuthMiddleware } = require("../jwt");
-const residentController = require('../controllers/resident.controller');
+const residentController = require('../controllers/residentInfo.controller');
 
 /**
  * @swagger
  * tags:
- *   name: Resident
- *   description: API endpoints for managing resident information
+ *   name: Information
+ *   description: API endpoints for managing residentInfo and staff information
  */
 
 /**
  * @swagger
- * /api/resident:
+ * /api/residentInfo:
  *   get:
- *     summary: Get all resident information or information of a specific resident
- *     tags: [Resident]
+ *     summary: Get all residentInfo information or information of a specific resident
+ *     tags: [Information]
  *     parameters:
  *       - in: query
  *         name: username
@@ -31,6 +31,7 @@ const residentController = require('../controllers/resident.controller');
  *       '500':
  *         description: Internal server error
  */
-router.get("/resident", jwtAuthMiddleware, residentController.getResidentInfo);
+
+router.get("/residentInfo", jwtAuthMiddleware, residentController.getResidentInfo);
 
 module.exports = router;

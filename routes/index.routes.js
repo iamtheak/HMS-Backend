@@ -11,8 +11,7 @@ const billingRoute = require('./billing.route');
 const maintenanceRoute = require('./maintenance.route');
 const allocateRoom = require('./allocateRoom.routes');
 const resetPassword = require('./resetPassword.route');
-const residentDetail = require('./resident.routes');
-
+const residentDetail = require('./residentInfo.routes');
 
 router.use(loginRoute)
 router.use(signUpRoute)
