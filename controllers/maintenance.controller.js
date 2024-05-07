@@ -4,13 +4,49 @@ const Staff = require('../models/staffs');
 // Controller function to fetch assigned maintenance tasks details
 exports.getAllMaintenance = async (req, res) => {
     try {
-      // fetch all assigned maintenance tasks from the database
-      const maintenanceDetails = await Maintenance.find({}, 'maintenanceId staffId staffName task jobStatus');
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
+        // fetch all assigned maintenance tasks from the database
+        const maintenanceDetails = await Maintenance.find({}, 'maintenanceId staffId staffName task jobStatus');
 
-      res.status(200).json({ maintenanceDetails });
-    } catch (error) {
-      console.error('Error fetching maintenance task details:', error);
-      res.status(500).json({ error: 'Server error' });
+        res.status(200).json({ maintenanceDetails });
+    } 
+    catch (error) {
+        console.error('Error fetching maintenance task details:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+// Controller action to retrieve a single maintenance by maintenanceID
+exports.getOneMaintenance = async (req, res) => {
+    try {
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
+
+        const maintenanceId = req.params.maintenanceId;
+
+        // check if maintenanceId is entered
+        if (!maintenanceId) {
+            return res.status(400).json({ message: 'Maintenance ID is required' });
+        }
+
+        // check if maintenanceId is a valid number
+        if (isNaN(parseInt(maintenanceId))) {
+            return res.status(400).json({ message: 'Invalid Maintenance ID' });
+        }
+
+        // retrieve a single maintenance task by ID
+        const maintenance = await Maintenance.findOne({ maintenanceId: parseInt(maintenanceId) });
+
+        if (!maintenance) {
+            return res.status(404).json({ message: 'Maintenance task not found' });
+        }
+
+        return res.json({ message: 'Maintenance task details retrieved successfully', maintenance });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
     }
 };
 
@@ -19,6 +55,10 @@ exports.assignMaintenance = async (req, res) => {
     const { maintenanceId, staffId, task } = req.body;
 
     try {
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
+
         let newMaintenanceId;
 
         if (!maintenanceId) {
@@ -57,6 +97,10 @@ exports.assignMaintenance = async (req, res) => {
 // Controller function to reassign maintenance task details
 exports.reassignMaintenance = async (req, res) => {
     try {
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
+
         const maintenanceId = req.params.maintenanceId;
 
         // check if maintenanceId is entered
@@ -102,6 +146,10 @@ exports.reassignMaintenance = async (req, res) => {
 // Controller function to delete assigned maintenance task
 exports.deleteMaintenance = async (req, res) => {
     try {
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        }
+        
         const maintenanceId = req.params.maintenanceId;
 
         // check if maintenanceId is entered

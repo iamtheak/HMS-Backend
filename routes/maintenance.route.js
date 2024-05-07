@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
+const { jwtAuthMiddleware } = require("../jwt");
+
 const maintenanceController = require('../controllers/maintenance.controller');
+const { maintenanceValidator } = require('../validators/maintenance.validator');
 
 /**
  * @swagger
@@ -41,7 +44,31 @@ const maintenanceController = require('../controllers/maintenance.controller');
  *       '500':
  *         description: Internal server error
  */
-router.get("/maintenance", maintenanceController.getAllMaintenance);
+router.get("/maintenance", jwtAuthMiddleware, maintenanceController.getAllMaintenance);
+
+// GET route to retrieve a single assigned maintenance task by ID
+/**
+ * @swagger
+ * /api/maintenance/{maintenanceId}:
+ *   get:
+ *     summary: Retrieve a single assigned maintenance task by ID
+ *     tags: [Maintenance]
+ *     parameters:
+ *       - in: path
+ *         name: maintenanceId
+ *         description: ID of the maintenance task to retrieve
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: A single assigned maintenance task
+ *       '404':
+ *         description: Maintenance task not found
+ *       '500':
+ *         description: Internal server error
+ */
+router.get("/maintenance/:maintenanceId", jwtAuthMiddleware, maintenanceController.getOneMaintenance);
 
 // POST route to assign a new maintenance task
 /**
@@ -62,7 +89,7 @@ router.get("/maintenance", maintenanceController.getAllMaintenance);
  *       '400':
  *         description: Bad request
  */
-router.post("/maintenance", maintenanceController.assignMaintenance);
+router.post("/maintenance", jwtAuthMiddleware, maintenanceValidator, maintenanceController.assignMaintenance);
 
 // PUT route to reassign a maintenance task
 /**
@@ -92,7 +119,7 @@ router.post("/maintenance", maintenanceController.assignMaintenance);
  *       '400':
  *         description: Bad request
  */
-router.put("/maintenance/:maintenanceId", maintenanceController.reassignMaintenance);
+router.put("/maintenance/:maintenanceId", jwtAuthMiddleware, maintenanceValidator, maintenanceController.reassignMaintenance);
 
 // DELETE route to delete an assigned maintenance task
 /**
@@ -116,6 +143,6 @@ router.put("/maintenance/:maintenanceId", maintenanceController.reassignMaintena
  *       '500':
  *         description: Internal server error
  */
-router.delete("/maintenance/:maintenanceId", maintenanceController.deleteMaintenance);
+router.delete("/maintenance/:maintenanceId", jwtAuthMiddleware, maintenanceController.deleteMaintenance);
 
 module.exports = router;
