@@ -21,8 +21,8 @@ exports.getAllMaintenance = async (req, res) => {
 // Controller action to retrieve a single maintenance by maintenanceID
 exports.getOneMaintenance = async (req, res) => {
     try {
-        if (req.user.role !== 'Admin') {
-            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+        if (req.user.role !== 'Admin' && req.user.role !== 'Staff') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin and Staff can perform this action' });
         }
 
         const maintenanceId = req.params.maintenanceId;

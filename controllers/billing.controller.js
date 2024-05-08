@@ -36,35 +36,35 @@ exports.getRentPayments = async (req, res) => {
 // Controller function to fetch rent payment details of a single user by username
 exports.getOneRentPayment = async (req, res) => {
   try {
-    if (req.user.role !== 'Admin') {
-      return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+    if (req.user.role !== 'Admin' && req.user.role !== 'Resident') {
+      return res.status(403).json({ message: 'Unauthorized. Only Admin and Resident can perform this action' });
     }
 
-    const username = req.params.username;
+    const enteredUsername = req.params.username;
       
     // check if username is entered
-    if (!username) {
+    if (!enteredUsername) {
       return res.status(400).json({ message: 'Username is required' });
     }
 
     // check if username is a string
-    if (typeof username !== 'string') {
+    if (typeof enteredUsername !== 'string') {
       return res.status(400).json({ message: 'Username must be a string' });
     }
 
     // retrieve a user by username
-    const user = await User.findOne({ username: username }).populate('billing');
+    const user = await User.findOne({ username: enteredUsername }).populate('billing');
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     // extract rent payment details from the user
-    const { staffId, firstName, lastName, billing } = user;
+    const { username, firstName, lastName, billing } = user;
     const { amount, nextPayDate, status, pastBills } = billing;
 
     const rentPaymentDetails = {
-      staffId: staffId,
+      username: username,
       residentName: `${firstName} ${lastName}`,
       amount,
       nextPayDate: formatDate(nextPayDate),
@@ -113,34 +113,35 @@ exports.getSalaryPayments = async (req, res) => {
 // Controller function to fetch salary payment details of a single staff by staffId
 exports.getOneSalaryPayment = async (req, res) => {
   try {
-    if (req.user.role !== 'Admin') {
-      return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+    if (req.user.role !== 'Admin' && req.user.role !== 'Staff') {
+      return res.status(403).json({ message: 'Unauthorized. Only Admin and Staff can perform this action' });
     }
 
-    const staffId = req.params.staffId;
+    const enteredStaffId = req.params.staffId;
       
     // check if staffId is entered
-    if (!staffId) {
+    if (!enteredStaffId) {
       return res.status(400).json({ message: 'Staff ID is required' });
     }
 
     // check if staffId is a number
-    if (isNaN(staffId)) {
+    if (isNaN(enteredStaffId)) {
       return res.status(400).json({ message: 'Staff ID must be a number' });
     }
 
     // retrieve a staff by staffId
-    const staff = await Staff.findOne({ staffId: staffId }).populate('billing');
+    const staff = await Staff.findOne({ staffId: enteredStaffId }).populate('billing');
 
     if (!staff) {
       return res.status(404).json({ message: 'Staff not found' });
     }
 
     // extract salary payment details from the staff
-    const { firstName, lastName, billing } = staff;
+    const { staffId, firstName, lastName, billing } = staff;
     const { amount, nextPayDate, status, pastBills } = billing;
 
     const salaryPaymentDetails = {
+      staffId: staffId,
       staffName: `${firstName} ${lastName}`,
       amount,
       nextPayDate: formatDate(nextPayDate),
