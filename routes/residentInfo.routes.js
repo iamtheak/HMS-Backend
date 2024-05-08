@@ -15,15 +15,8 @@ const { updateResidentValidator } = require('../validators/updateResident.valida
  * @swagger
  * /api/residentInfo:
  *   get:
- *     summary: Get all residentInfo information or information of a specific resident
+ *     summary: Get all residentInfo information
  *     tags: [Resident]
- *     parameters:
- *       - in: query
- *         name: username
- *         required: false
- *         description: Username of the resident whose information is to be retrieved. If not provided, information of all residents will be retrieved.
- *         schema:
- *           type: string
  *     responses:
  *       '200':
  *         description: Successful operation
@@ -32,7 +25,30 @@ const { updateResidentValidator } = require('../validators/updateResident.valida
  *       '500':
  *         description: Internal server error
  */
-router.get("/residentInfo", jwtAuthMiddleware, residentController.getResidentInfo);
+router.get("/residentInfo", jwtAuthMiddleware, residentController.getAllResidentInfo);
+
+/**
+ * @swagger
+ * /api/residentInfo/{username}:
+ *   get:
+ *     summary: Get information of a specific resident by username
+ *     tags: [Resident]
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         description: Username of the resident to retrieve information for
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *       '404':
+ *         description: Resident not found
+ *       '500':
+ *         description: Internal server error
+ */
+router.get("/residentInfo/:username", residentController.getSingleResidentInfo);
 
 /**
  * @swagger

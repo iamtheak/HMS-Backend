@@ -10,7 +10,7 @@
     "node",
     "api"
   ],
-  "author": "Bidhi Maharjan",
+  "author": "Bidhi Maharjan and Sumit Bogati", 
   "license": "ISC",
   "dependencies": {
     "body-parse": "^0.1.0",

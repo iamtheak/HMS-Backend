@@ -1,23 +1,18 @@
 const Allocation = require('../models/allocateRoom.model');
 const User = require('../models/users');
 
-exports.getResidentInfo = async (req, res) => {
+exports.getAllResidentInfo = async (req, res) => {
     try {
+        // Check if the user is authorized to perform this action
         if (req.user.role !== 'Admin') {
             return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
         }
 
-        const { username } = req.query;
-
-        let query = { role: "Resident" }; // Filter to get only residents
-
-        if (username) {
-            query.username = username;
-        }
+        const query = { role: "Resident" }; // Filter to get only residents
 
         const users = await User.find(query);
         if (users.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'No residents found' });
         }
 
         const residentInfo = [];
@@ -31,7 +26,8 @@ exports.getResidentInfo = async (req, res) => {
                     roomId: allocation.roomId,
                     firstName: user.firstName,
                     lastName: user.lastName,
-                    dateOfBirth: user.dateOfBirth
+                    dateOfBirth: user.dateOfBirth,
+                    email: user.email
                 });
             } else {
                 residentInfo.push({
@@ -41,7 +37,8 @@ exports.getResidentInfo = async (req, res) => {
                     roomId: 'Not allocated',
                     firstName: user.firstName,
                     lastName: user.lastName,
-                    dateOfBirth: user.dateOfBirth
+                    dateOfBirth: user.dateOfBirth,
+                    email: user.email
                 });
             }
         }
@@ -52,7 +49,33 @@ exports.getResidentInfo = async (req, res) => {
     }
 };
 
-// Controller action to update resident details
+exports.getSingleResidentInfo = async (req, res) => {
+    try {
+        const { username } = req.params;
+
+        const user = await User.findOne({ username, role: 'Resident' });
+        if (!user) {
+            return res.status(404).json({ message: 'Resident not found' });
+        }
+
+        const allocation = await Allocation.findOne({ username });
+        const residentInfo = {
+            username: user.username,
+            phone: user.phone,
+            citizenshipNo: user.citizenshipNo,
+            roomId: allocation ? allocation.roomId : 'Not allocated',
+            firstName: user.firstName,
+            lastName: user.lastName,
+            dateOfBirth: user.dateOfBirth,
+            email: user.email
+        };
+
+        res.json({ message: 'Resident information retrieved successfully', residentInfo });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
 exports.updateResident = async (req, res) => {
     try {
         if (req.user.role !== 'Resident') {
@@ -68,32 +91,23 @@ exports.updateResident = async (req, res) => {
             return res.status(404).json({ message: 'Resident not found' });
         }
 
-        // Check if any fields are provided in the request body
-        const { firstName, middleName, lastName, email, phone, citizenshipNo, dateOfBirth, newUsername } = req.body;
-        if (!firstName && middleName === undefined && !lastName && !email && !phone && !citizenshipNo && !dateOfBirth && newUsername === undefined) {
-            return res.status(400).json({ message: 'No fields provided for update' });
-        }
-
-        // Check if the provided values are the same as the current values in the database
-        if (
-            firstName === resident.firstName &&
-            middleName === resident.middleName &&
-            newUsername === resident.username &&
-            lastName === resident.lastName &&
-            email === resident.email &&
-            phone === resident.phone &&
-            citizenshipNo === resident.citizenshipNo &&
-            dateOfBirth === resident.dateOfBirth
-        ) {
-            return res.status(400).json({ message: 'No changes detected' });
-        }
-
-        // Check if newUsername is the same as the username parameter
-        if (newUsername !== undefined && newUsername === username) {
-            return res.status(400).json({ message: 'Username is the same as the existing username. No update needed.' });
-        }
-
         // Update resident details if provided in the request body
+        const { firstName, middleName, lastName, email, phone, citizenshipNo, dateOfBirth, newUsername } = req.body;
+
+             // Check if all fields are empty
+             if (
+                !firstName &&
+                middleName === undefined &&
+                !lastName &&
+                !email &&
+                !phone &&
+                !citizenshipNo &&
+                !dateOfBirth &&
+                newUsername === undefined
+            ) {
+                return res.status(400).json({ message: 'No fields provided for update' });
+            }
+
         if (firstName !== undefined) {
             resident.firstName = firstName;
         }
@@ -151,8 +165,11 @@ exports.deleteResident = async (req, res) => {
         // Delete the resident user
         await User.findOneAndDelete({ username, role: 'Resident' });
 
+        // Delete allocated rooms for the deleted resident
+        await Allocation.deleteMany({ username });
+
         // Return success message
-        res.json({ message: 'Resident deleted successfully' });
+        res.json({ message: 'Resident deleted successfully'});
     } catch (err) {
         // Handle errors
         res.status(500).json({ message: err.message });
