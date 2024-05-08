@@ -32,6 +32,50 @@ exports.getRentPayments = async (req, res) => {
   }
 };
 
+// Controller function to fetch rent payment details of a single user by username
+exports.getOneRentPayment = async (req, res) => {
+  try {
+    if (req.user.role !== 'Admin') {
+      return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+    }
+
+    const username = req.params.username;
+      
+    // check if username is entered
+    if (!username) {
+      return res.status(400).json({ message: 'Username is required' });
+    }
+
+    // check if username is a string
+    if (typeof username !== 'string') {
+      return res.status(400).json({ message: 'Username must be a string' });
+    }
+
+    // retrieve a user by username
+    const user = await User.findOne({ username: username }).populate('billing');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // extract rent payment details from the user
+    const { firstName, lastName, billing } = user;
+    const { amount, nextPayDate, status, pastBills } = billing;
+
+    const rentPaymentDetails = {
+      residentName: `${firstName} ${lastName}`,
+      amount,
+      nextPayDate: formatDate(nextPayDate),
+      status,
+      pastBills
+    };
+
+    res.status(200).json({ rentPaymentDetails });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
 // Controller function to fetch salary payment details
 exports.getSalaryPayments = async (req, res) => {
     try {
@@ -62,6 +106,50 @@ exports.getSalaryPayments = async (req, res) => {
       console.error('Error fetching salary payments:', error);
       res.status(500).json({ error: 'Server error' });
     }
+};
+
+// Controller function to fetch salary payment details of a single staff by staffId
+exports.getOneSalaryPayment = async (req, res) => {
+  try {
+    if (req.user.role !== 'Admin') {
+      return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+    }
+
+    const staffId = req.params.staffId;
+      
+    // check if staffId is entered
+    if (!staffId) {
+      return res.status(400).json({ message: 'Staff ID is required' });
+    }
+
+    // check if staffId is a number
+    if (isNaN(staffId)) {
+      return res.status(400).json({ message: 'Staff ID must be a number' });
+    }
+
+    // retrieve a staff by staffId
+    const staff = await Staff.findOne({ staffId: staffId }).populate('billing');
+
+    if (!staff) {
+      return res.status(404).json({ message: 'Staff not found' });
+    }
+
+    // extract salary payment details from the staff
+    const { firstName, lastName, billing } = staff;
+    const { amount, nextPayDate, status, pastBills } = billing;
+
+    const salaryPaymentDetails = {
+      staffName: `${firstName} ${lastName}`,
+      amount,
+      nextPayDate: formatDate(nextPayDate),
+      status,
+      pastBills
+    };
+
+    res.status(200).json({ salaryPaymentDetails });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
 };
 
 // Controller function to post rent payment status by username
