@@ -25,6 +25,25 @@ const { jwtAuthMiddleware } = require('../jwt');
  *           description: Feedback message.
  */
 
+
+/**
+ * @swagger
+ * /api/feedback:
+ *   get:
+ *     summary: Get all feedback
+ *     tags: [Feedback]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Successfully retrieved feedback
+ *       '403':
+ *         description: Unauthorized
+ *       '500':
+ *         description: Internal server error
+ */
+router.get('/feedback', jwtAuthMiddleware, feedbackController.getAllFeedback);
+
 /**
  * @swagger
  * /api/feedback:
@@ -44,20 +63,49 @@ const { jwtAuthMiddleware } = require('../jwt');
  *         description: Feedback submitted successfully
  *       '400':
  *         description: Bad request
- *   get:
- *     summary: Get all feedback
+ */
+router.post('/feedback', jwtAuthMiddleware, feedbackValidator.validateFeedback, feedbackController.createFeedback);
+
+/**
+ * @swagger
+ * /api/feedback/respond:
+ *   post:
+ *     summary: Respond to feedback
  *     tags: [Feedback]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: feedbackId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the feedback to respond to.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - response
+ *             properties:
+ *               response:
+ *                 type: string
+ *                 description: Admin response to the feedback.
  *     responses:
  *       '200':
- *         description: Successfully retrieved feedback
+ *         description: Response added successfully
+ *       '400':
+ *         description: Bad request
  *       '403':
  *         description: Unauthorized
+ *       '404':
+ *         description: Feedback not found
  *       '500':
  *         description: Internal server error
  */
-router.post('/feedback', jwtAuthMiddleware, feedbackValidator.validateFeedback, feedbackController.createFeedback);
-router.get('/feedback', jwtAuthMiddleware, feedbackController.getAllFeedback);
+
+router.post('/feedback/respond', jwtAuthMiddleware, feedbackController.respondToFeedback);
 
 module.exports = router;

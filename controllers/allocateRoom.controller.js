@@ -112,7 +112,7 @@ exports.updateAllocateRoom = async (req, res) => {
         // Check if user role is 'Resident'
         const user = await User.findOne({ username });
         if (user.role !== 'Resident') {
-            return res.status(400).json({ message: 'Only Resident can be allocated to a room' });
+            return res.status(400).json({ message: 'Only Resident can be allocated to a room'});
         }
 
         // Check room occupancy
