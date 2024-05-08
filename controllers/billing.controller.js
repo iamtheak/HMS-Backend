@@ -13,10 +13,11 @@ exports.getRentPayments = async (req, res) => {
 
     // extract rent payment details from the users
     const rentPayments = users.map(user => {
-      const { firstName, lastName, billing } = user;
+      const { username, firstName, lastName, billing } = user;
       const { amount, nextPayDate, status, pastBills } = billing;
 
       return {
+        username: username,
         residentName: `${firstName} ${lastName}`,
         amount,
         nextPayDate: formatDate(nextPayDate),
@@ -59,10 +60,11 @@ exports.getOneRentPayment = async (req, res) => {
     }
 
     // extract rent payment details from the user
-    const { firstName, lastName, billing } = user;
+    const { staffId, firstName, lastName, billing } = user;
     const { amount, nextPayDate, status, pastBills } = billing;
 
     const rentPaymentDetails = {
+      staffId: staffId,
       residentName: `${firstName} ${lastName}`,
       amount,
       nextPayDate: formatDate(nextPayDate),
