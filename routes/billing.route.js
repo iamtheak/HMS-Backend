@@ -23,11 +23,38 @@ const { rentPaymentValidator, salaryPaymentValidator } = require('../validators/
  *     responses:
  *       '200':
  *         description: Rent Payment Details
+ *       '404':
+ *         description: User not found
  *       '500':
  *         description: Internal server error
  */
 
 router.get('/billing/rent', jwtAuthMiddleware, billingController.getRentPayments);
+
+// GET route to get rent payment details for a single user by username
+/**
+ * @swagger
+ * /api/billing/rent/{username}:
+ *   get:
+ *     summary: Retrieve rent payment details for a single user by username
+ *     tags: [Billing]
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         description: username of the user whose payment details need to be retrieved
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Rent Payment Details
+ *       '404':
+ *         description: User not found
+ *       '500':
+ *         description: Internal server error
+ */
+
+router.get('/billing/rent/:username', jwtAuthMiddleware, billingController.getOneRentPayment);
 
 // GET route to get salary payment details
 /**
@@ -39,11 +66,38 @@ router.get('/billing/rent', jwtAuthMiddleware, billingController.getRentPayments
  *     responses:
  *       '200':
  *         description: Salary Payment Details
+ *       '404':
+ *         description: Staff not found
  *       '500':
  *         description: Internal server error
  */
 
 router.get('/billing/salary', jwtAuthMiddleware, billingController.getSalaryPayments);
+
+// GET route to get salary payment details for a single staff by staff ID
+/**
+ * @swagger
+ * /api/billing/salary/{staffId}:
+ *   get:
+ *     summary: Retrieve salary payment details for a single staff by staff ID
+ *     tags: [Billing]
+ *     parameters:
+ *       - in: path
+ *         name: staffId
+ *         description: staffId of the staff whose salary payment details need to be retrieved
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '200':
+ *         description: Salary Payment Details
+ *       '404':
+ *         description: Staff not found
+ *       '500':
+ *         description: Internal server error
+ */
+
+router.get('/billing/salary/:staffId', jwtAuthMiddleware, billingController.getOneSalaryPayment);
 
 // POST route to update rent payment status
 /**
