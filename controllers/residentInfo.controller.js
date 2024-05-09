@@ -1,5 +1,7 @@
 const Allocation = require('../models/allocateRoom.model');
 const User = require('../models/users');
+const jwt = require('jsonwebtoken');
+const { generateToken } = require('../jwt');
 
 exports.getAllResidentInfo = async (req, res) => {
     try {
@@ -25,6 +27,7 @@ exports.getAllResidentInfo = async (req, res) => {
                     citizenshipNo: user.citizenshipNo,
                     roomId: allocation.roomId,
                     firstName: user.firstName,
+                    middleName : user.middleName,
                     lastName: user.lastName,
                     dateOfBirth: user.dateOfBirth,
                     email: user.email
@@ -36,6 +39,7 @@ exports.getAllResidentInfo = async (req, res) => {
                     citizenshipNo: user.citizenshipNo,
                     roomId: 'Not allocated',
                     firstName: user.firstName,
+                    middleName : user.middleName,
                     lastName: user.lastName,
                     dateOfBirth: user.dateOfBirth,
                     email: user.email
@@ -65,6 +69,7 @@ exports.getSingleResidentInfo = async (req, res) => {
             citizenshipNo: user.citizenshipNo,
             roomId: allocation ? allocation.roomId : 'Not allocated',
             firstName: user.firstName,
+            middleName : user.middleName,
             lastName: user.lastName,
             dateOfBirth: user.dateOfBirth,
             email: user.email
@@ -94,19 +99,21 @@ exports.updateResident = async (req, res) => {
         // Update resident details if provided in the request body
         const { firstName, middleName, lastName, email, phone, citizenshipNo, dateOfBirth, newUsername } = req.body;
 
-             // Check if all fields are empty
-             if (
-                !firstName &&
-                middleName === undefined &&
-                !lastName &&
-                !email &&
-                !phone &&
-                !citizenshipNo &&
-                !dateOfBirth &&
-                newUsername === undefined
-            ) {
-                return res.status(400).json({ message: 'No fields provided for update' });
-            }
+        // Check if all fields are empty
+        if (
+            !firstName &&
+            middleName === undefined &&
+            !lastName &&
+            !email &&
+            !phone &&
+            !citizenshipNo &&
+            !dateOfBirth &&
+            newUsername === undefined
+        ) {
+            return res.status(400).json({ message: 'No fields provided for update' });
+        }
+
+        let newToken;
 
         if (firstName !== undefined) {
             resident.firstName = firstName;
@@ -136,11 +143,24 @@ exports.updateResident = async (req, res) => {
                 return res.status(400).json({ message: 'Username already in use' });
             }
             resident.username = newUsername;
+
+            // Generate a new token with updated user information
+            newToken = generateToken({
+                username: newUsername,
+                role: req.user.role,
+                email: req.user.email,
+            });
         }
 
         // Save the updated resident
-        const updatedResident = await resident.save();
-        res.json({ message: 'Resident updated successfully' });
+        await resident.save();
+
+        // Send the response with or without new token
+        if (newToken) {
+            res.json({ message: 'Resident updated successfully', newToken });
+        } else {
+            res.json({ message: 'Resident updated successfully' });
+        }
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
