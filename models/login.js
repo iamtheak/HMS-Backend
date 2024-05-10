@@ -46,7 +46,7 @@ const userSchema = new Schema({
     },
     staffId: {
         type: Number,
-        required: true,
+        required: null,
     }
 }, { collection: "Users" });
 
