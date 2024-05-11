@@ -15,9 +15,46 @@ const { updateStaffValidator } = require('../validators/updateStaff.validator');
 
 /**
  * @swagger
+ * /api/staffs:
+ *   get:
+ *     summary: Retrieve all staffs
+ *     tags: [Staffs]
+ *     responses:
+ *       '200':
+ *         description: A list of Staffs
+ *       '500':
+ *         description: Internal server error
+ */
+router.get("/staffs", jwtAuthMiddleware, staffController.getAllStaffs);
+
+/**
+ * @swagger
+ * /api/staffs/{staffId}:
+ *   get:
+ *     summary: Retrieve a single staff by ID
+ *     tags: [Staffs]
+ *     parameters:
+ *       - in: path
+ *         name: staffId
+ *         description: ID of the staff to retrieve
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: A single Staff
+ *       '404':
+ *         description: Staff not found
+ *       '500':
+ *         description: Internal server error
+ */
+router.get("/staffs/:staffId", jwtAuthMiddleware, staffController.getOneStaff);
+
+/**
+ * @swagger
  * components:
  *   schemas:
- *     Staff:
+ *     AddStaff:
  *       type: object
  *       required:
  *         - username
@@ -65,44 +102,6 @@ const { updateStaffValidator } = require('../validators/updateStaff.validator');
 /**
  * @swagger
  * /api/staffs:
- *   get:
- *     summary: Retrieve all staffs
- *     tags: [Staffs]
- *     responses:
- *       '200':
- *         description: A list of Staffs
- *       '500':
- *         description: Internal server error
- */
-router.get("/staffs", jwtAuthMiddleware, staffController.getAllStaffs);
-
-/**
- * @swagger
- * /api/staffs/{staffId}:
- *   get:
- *     summary: Retrieve a single staff by ID
- *     tags: [Staffs]
- *     parameters:
- *       - in: path
- *         name: staffId
- *         description: ID of the staff to retrieve
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       '200':
- *         description: A single Staff
- *       '404':
- *         description: Staff not found
- *       '500':
- *         description: Internal server error
- */
-router.get("/staffs/:staffId", jwtAuthMiddleware, staffController.getOneStaff);
-
-
-/**
- * @swagger
- * /api/staffs:
  *   post:
  *     summary: Add a new staff
  *     tags: [Staffs]
@@ -111,7 +110,7 @@ router.get("/staffs/:staffId", jwtAuthMiddleware, staffController.getOneStaff);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Staff'
+ *             $ref: '#/components/schemas/AddStaff'
  *     responses:
  *       '201':
  *         description: Staff added successfully
@@ -119,6 +118,52 @@ router.get("/staffs/:staffId", jwtAuthMiddleware, staffController.getOneStaff);
  *         description: Bad request
  */
 router.post("/staffs", jwtAuthMiddleware, createStaffValidator, staffController.addStaff);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UpdateStaff:
+ *       type: object
+ *       required:
+ *         - username
+ *         - firstName
+ *         - middleName
+ *         - lastName
+ *         - email
+ *         - phone
+ *         - citizenshipNo
+ *         - password 
+ *         - amount 
+ *       properties:
+ *         username:
+ *           type: string
+ *           description: Staff's username
+ *         firstName:
+ *           type: string
+ *           description: Staff's first name
+ *         middleName:
+ *           type: string
+ *           description: Staff's middle name
+ *           default: null
+ *         lastName:
+ *           type: string
+ *           description: Staff's last name
+ *         email:
+ *           type: string
+ *           description: Staff's email address
+ *           default: abc@example.com
+ *         phone:
+ *           type: number
+ *           description: Staff's phone number
+ *         citizenshipNo:
+ *           type: string
+ *           description: Staff's citizenship number
+ *           default: 00-00-00-00000
+ *         amount:
+ *           type: number
+ *           description: Staff's salary
+ */
 
 /**
  * @swagger
@@ -138,7 +183,7 @@ router.post("/staffs", jwtAuthMiddleware, createStaffValidator, staffController.
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Staff'
+ *             $ref: '#/components/schemas/UpdateStaff'
  *     responses:
  *       '200':
  *         description: Staff updated successfully
