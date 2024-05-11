@@ -49,7 +49,7 @@ exports.getOneStaff = async (req, res) => {
 
 // Controller action to add new staff
 exports.addStaff = async (req, res) => {
-    const { username, staffId, firstName, middleName, lastName, email, phone, citizenshipNo, password } = req.body;
+    const { username, staffId, firstName, middleName, lastName, email, phone, citizenshipNo, password, amount } = req.body;
 
     try {
         if (req.user.role !== 'Admin') {
@@ -92,7 +92,8 @@ exports.addStaff = async (req, res) => {
             joinedDate,
             billing: {
                 nextPayDate, // set the nextPayDate as calculated
-                status: "Pending" // set status as Pending by default
+                status: "Pending", // set status as Pending by default
+                amount
             }  
         });
 
@@ -153,6 +154,9 @@ exports.updateStaff = async (req, res) => {
         }
         if (req.body.password != null) {
             staff.password = req.body.password;
+        }
+        if (req.body.amount != null) {
+            staff.billing.amount = req.body.amount;
         }
 
         // Save the updated staff
