@@ -152,9 +152,6 @@ exports.updateStaff = async (req, res) => {
         if (req.body.citizenshipNo != null) {
             staff.citizenshipNo = req.body.citizenshipNo;
         }
-        if (req.body.password != null) {
-            staff.password = req.body.password;
-        }
         if (req.body.amount != null) {
             staff.billing.amount = req.body.amount;
         }
