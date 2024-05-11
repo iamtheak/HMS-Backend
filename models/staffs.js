@@ -68,7 +68,7 @@ const staffSchema = new mongoose.Schema({
       },
       amount: {
         type: Number,
-        default: null
+        required: true
       },
       status: {
         type: String,

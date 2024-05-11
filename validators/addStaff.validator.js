@@ -125,6 +125,18 @@ const createStaffSchema = checkSchema({
         errorMessage: 'Password must be between 8 to 30 characters with at least one letter and one number',
     },
   },
+  amount: {
+    notEmpty: {
+      errorMessage: 'Salary amount is required',
+    },
+    isNumeric: {
+      errorMessage: 'Salary amount must be a number',
+    },
+    isFloat: {
+      errorMessage: 'Salary amount must be at least 10,000 and at most 1,00,00,000',
+      options: { min: 10000, max: 10000000 },
+    },
+  },
 });
 
 // Validation middleware using the created schema

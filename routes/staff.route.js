@@ -28,6 +28,7 @@ const { updateStaffValidator } = require('../validators/updateStaff.validator');
  *         - phone
  *         - citizenshipNo
  *         - password 
+ *         - amount 
  *       properties:
  *         username:
  *           type: string
@@ -56,6 +57,9 @@ const { updateStaffValidator } = require('../validators/updateStaff.validator');
  *         password:
  *           type: string
  *           description: Staff's password
+ *         amount:
+ *           type: number
+ *           description: Staff's salary
  */
 
 /**
