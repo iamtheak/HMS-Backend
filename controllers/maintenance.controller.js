@@ -85,6 +85,40 @@ exports.assignMaintenance = async (req, res) => {
     }
 };
 
+// Controller function to change the job status of the maintenance task by staff
+exports.changeJobStatus = async (req, res) => {
+    try {
+        if (req.user.role !== 'Staff') {
+          return res.status(403).json({ message: 'Unauthorized. Only Staff can perform this action' });
+        }
+    
+        const maintenanceId = req.body.maintenanceId;
+        console.log(maintenanceId);
+    
+        // find the staff by staffId
+        const maintenance = await Maintenance.findOne({maintenanceId: maintenanceId});
+    
+        if (!maintenance) {
+          return res.status(404).json({ error: 'Maintenance task not found' });
+        }
+        console.log(maintenance);
+    
+        // if job status is Pending, change to Done
+        if (maintenance.jobStatus === 'Pending' ) {
+            maintenance.jobStatus = 'Done';
+            res.status(200).json({ message: 'Job status updated successfully' });
+        } else {
+            res.status(200).json({ message: 'Job is already done' });
+        }
+    
+        // save the updated maintenance
+        await maintenance.save();
+      } catch (error) {
+        console.error('Error fetching maintenance:', error);
+        res.status(500).json({ error: 'Server error' });
+      }
+};
+
 // Controller function to reassign maintenance task details
 exports.reassignMaintenance = async (req, res) => {
     try {
