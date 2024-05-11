@@ -3,84 +3,40 @@ const Staff = require('../models/staffs');
 
 // Controller function to fetch assigned maintenance tasks details
 exports.getAllMaintenance = async (req, res) => {
-    try {
-        if (req.user.role !== 'Admin') {
-            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
-        }
-        // fetch all assigned maintenance tasks from the database
-        const maintenanceDetails = await Maintenance.find({}, 'maintenanceId staffId staffName task jobStatus');
+    try {    
+        if (req.query.maintenanceId) {
+            if (req.user.role !== 'Admin') {
+                return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+            }
 
-        res.status(200).json({ maintenanceDetails });
+            const maintenanceDetails = await Maintenance.findOne({ maintenanceId: parseInt(req.query.maintenanceId) }, 'maintenanceId staffId staffName task jobStatus');
+            if (!maintenanceDetails) {
+                return res.status(404).json({ message: 'Maintenance not found' });
+            }
+            res.json({ message: 'Maintenance details retrieved successfully', maintenanceDetails });
+        } else if (req.query.staffId) {
+            if (req.user.role !== 'Staff') {
+                return res.status(403).json({ message: 'Unauthorized. Only Staff can perform this action' });
+            }
+
+            const maintenanceDetails = await Maintenance.find({ staffId: parseInt(req.query.staffId) }, 'maintenanceId staffId staffName task jobStatus');
+            if (!maintenanceDetails || maintenanceDetails.length === 0) {
+                return res.status(404).json({ message: 'Maintenance not found' });
+            }
+            res.json({ message: 'Maintenance details retrieved successfully', maintenanceDetails });
+        } else {
+            if (req.user.role !== 'Admin') {
+                return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+            }
+
+            // fetch all assigned maintenance tasks from the database
+            const maintenanceDetails = await Maintenance.find({}, 'maintenanceId staffId staffName task jobStatus');
+            res.json({ message: 'All maintenance tasks', maintenanceDetails });
+        }
     } 
     catch (error) {
         console.error('Error fetching maintenance task details:', error);
         res.status(500).json({ error: 'Server error' });
-    }
-};
-
-// Controller action to retrieve a single maintenance by maintenanceID
-exports.getMaintenanceByMaintenaceId = async (req, res) => {
-    try {
-        if (req.user.role !== 'Admin') {
-            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
-        }
-
-        const maintenanceId = req.params.maintenanceId;
-
-        // check if maintenanceId is entered
-        if (!maintenanceId) {
-            return res.status(400).json({ message: 'Maintenance ID is required' });
-        }
-
-        // check if maintenanceId is a valid number
-        if (isNaN(parseInt(maintenanceId))) {
-            return res.status(400).json({ message: 'Invalid Maintenance ID' });
-        }
-
-        // retrieve a single maintenance task by ID
-        const maintenance = await Maintenance.findOne({ maintenanceId: parseInt(maintenanceId) });
-
-        if (!maintenance) {
-            return res.status(404).json({ message: 'Maintenance task not found' });
-        }
-
-        return res.json({ message: 'Maintenance task details retrieved successfully', maintenance });
-    } catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
-};
-
-// Controller action to retrieve maintenance tasks by staffId
-exports.getMaintenanceByStaffId = async (req, res) => {
-    try {
-        if (req.user.role !== 'Staff') {
-            return res.status(403).json({ message: 'Unauthorized. Only Staff can perform this action' });
-        }
-
-        const staffId = req.params.staffId;
-
-        // check if staffId is entered
-        if (!staffId) {
-            return res.status(400).json({ message: 'Staff ID is required' });
-        }
-
-        // check if staffId is a valid number
-        if (isNaN(parseInt(staffId))) {
-            return res.status(400).json({ message: 'Invalid Staff ID' });
-        }
-        console.log(maintenance);
-        
-        // retrieve maintenance tasks by staffId
-        const maintenance = await Maintenance.find({ staffId: parseInt(staffId) });
-        console.log(maintenance);
-
-        if (!maintenance || maintenance.length === 0) {
-            return res.status(404).json({ message: 'Maintenance tasks not found for the entered staff.' });
-        }
-
-        return res.json({ message: 'Maintenance task details retrieved successfully', maintenance });
-    } catch (err) {
-        return res.status(500).json({ message: err.message });
     }
 };
 
