@@ -68,7 +68,33 @@ router.get("/maintenance", jwtAuthMiddleware, maintenanceController.getAllMainte
  *       '500':
  *         description: Internal server error
  */
-router.get("/maintenance/:maintenanceId", jwtAuthMiddleware, maintenanceController.getOneMaintenance);
+router.get("/maintenance/:maintenanceId", jwtAuthMiddleware, maintenanceController.getMaintenanceByMaintenaceId);
+
+
+// GET route to retrieve maintenance tasks by staffId
+/**
+ * @swagger
+ * /api/maintenance/{staffId}:
+ *   get:
+ *     summary: Retrieve maintenance tasks by staffId
+ *     tags: [Maintenance]
+ *     parameters:
+ *       - in: path
+ *         name: staffId
+ *         description: ID of the staff whose maintenance tasks need to be retrieved
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Maintenance tasks assigned to given staffId
+ *       '404':
+ *         description: Maintenance tasks not found
+ *       '500':
+ *         description: Internal server error
+ */
+router.get("/maintenance/byStaffId:staffId", jwtAuthMiddleware, maintenanceController.getMaintenanceByStaffId);
+
 
 // POST route to assign a new maintenance task
 /**
