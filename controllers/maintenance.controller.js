@@ -19,10 +19,10 @@ exports.getAllMaintenance = async (req, res) => {
 };
 
 // Controller action to retrieve a single maintenance by maintenanceID
-exports.getOneMaintenance = async (req, res) => {
+exports.getMaintenanceByMaintenaceId = async (req, res) => {
     try {
-        if (req.user.role !== 'Admin' && req.user.role !== 'Staff') {
-            return res.status(403).json({ message: 'Unauthorized. Only Admin and Staff can perform this action' });
+        if (req.user.role !== 'Admin') {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
         }
 
         const maintenanceId = req.params.maintenanceId;
@@ -49,6 +49,41 @@ exports.getOneMaintenance = async (req, res) => {
         return res.status(500).json({ message: err.message });
     }
 };
+
+// Controller action to retrieve maintenance tasks by staffId
+exports.getMaintenanceByStaffId = async (req, res) => {
+    try {
+        if (req.user.role !== 'Staff') {
+            return res.status(403).json({ message: 'Unauthorized. Only Staff can perform this action' });
+        }
+
+        const staffId = req.params.staffId;
+
+        // check if staffId is entered
+        if (!staffId) {
+            return res.status(400).json({ message: 'Staff ID is required' });
+        }
+
+        // check if staffId is a valid number
+        if (isNaN(parseInt(staffId))) {
+            return res.status(400).json({ message: 'Invalid Staff ID' });
+        }
+        console.log(maintenance);
+        
+        // retrieve maintenance tasks by staffId
+        const maintenance = await Maintenance.find({ staffId: parseInt(staffId) });
+        console.log(maintenance);
+
+        if (!maintenance || maintenance.length === 0) {
+            return res.status(404).json({ message: 'Maintenance tasks not found for the entered staff.' });
+        }
+
+        return res.json({ message: 'Maintenance task details retrieved successfully', maintenance });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
 
 // Controller function to assign a new maintenance task
 exports.assignMaintenance = async (req, res) => {
