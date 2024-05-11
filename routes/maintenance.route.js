@@ -109,6 +109,32 @@ router.post("/maintenance", jwtAuthMiddleware, maintenanceValidator, maintenance
  */
 router.put("/maintenance/:maintenanceId", jwtAuthMiddleware, maintenanceValidator, maintenanceController.reassignMaintenance);
 
+// PUT route to update job status of a maintenance task by staff
+/**
+ * @swagger
+ * /api/maintenance:
+ *   put:
+ *     summary: Change job status of a maintenance task
+ *     tags: [Maintenance]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               maintenanceId:
+ *                 type: integer
+ *                 description: ID of the maintenance task whose job status needs to be updated
+ *     responses:
+ *       '201':
+ *         description: Maintenance task of job status updated successfully
+ *       '400':
+ *         description: Bad request
+ */
+
+router.put("/maintenance", jwtAuthMiddleware, maintenanceController.changeJobStatus);
+
 // DELETE route to delete an assigned maintenance task
 /**
  * @swagger
