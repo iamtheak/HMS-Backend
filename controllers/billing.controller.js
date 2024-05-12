@@ -180,13 +180,6 @@ exports.postRentPaymentStatus = async (req, res) => {
     // update the billing status
     user.billing.status = newStatus;
 
-    // increment nextPayDate by 1 month if the status is changed to "Up-to-date"
-    if (newStatus === 'Up-to-date' && user.billing.nextPayDate) {
-      const nextPayDate = new Date(user.billing.nextPayDate);
-      nextPayDate.setMonth(nextPayDate.getMonth() + 1);
-      user.billing.nextPayDate = nextPayDate;
-    }
-
     // save the updated user
     await user.save();
 
@@ -221,13 +214,6 @@ exports.postSalaryPaymentStatus = async (req, res) => {
 
     // update the billing status
     staff.billing.status = newStatus;
-
-    // increment nextPayDate by 1 month if the status is changed to "Up-to-date"
-    if (newStatus === 'Up-to-date' && staff.billing.nextPayDate) {
-      const nextPayDate = new Date(staff.billing.nextPayDate);
-      nextPayDate.setMonth(nextPayDate.getMonth() + 1);
-      staff.billing.nextPayDate = nextPayDate;
-    }
 
     // save the updated staff
     await staff.save();

@@ -3,7 +3,8 @@ const Staff = require('../models/staffs');
 
 // Controller function to fetch assigned maintenance tasks details
 exports.getAllMaintenance = async (req, res) => {
-    try {    
+    try {
+        // fetch a single maintenance task by maintenanceId    
         if (req.query.maintenanceId) {
             if (req.user.role !== 'Admin') {
                 return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
@@ -15,8 +16,9 @@ exports.getAllMaintenance = async (req, res) => {
             }
             res.json({ message: 'Maintenance details retrieved successfully', maintenanceDetails });
         } else if (req.query.staffId) {
-            if (req.user.role !== 'Staff') {
-                return res.status(403).json({ message: 'Unauthorized. Only Staff can perform this action' });
+            // fetch maintenance tasks of a single staff by staffId 
+            if (req.user.role !== 'Admin') {
+                return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
             }
 
             const maintenanceDetails = await Maintenance.find({ staffId: parseInt(req.query.staffId) }, 'maintenanceId staffId staffName task jobStatus');
@@ -25,11 +27,11 @@ exports.getAllMaintenance = async (req, res) => {
             }
             res.json({ message: 'Maintenance details retrieved successfully', maintenanceDetails });
         } else {
+            // fetch all assigned maintenance tasks from the database
             if (req.user.role !== 'Admin') {
                 return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
             }
 
-            // fetch all assigned maintenance tasks from the database
             const maintenanceDetails = await Maintenance.find({}, 'maintenanceId staffId staffName task jobStatus');
             res.json({ message: 'All maintenance tasks', maintenanceDetails });
         }
