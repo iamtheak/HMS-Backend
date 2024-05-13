@@ -64,13 +64,13 @@ exports.getSingleResidentInfo = async (req, res) => {
 
         const allocation = await Allocation.findOne({ username });
         const residentInfo = {
-            username: user.username,
+            username: user.user_name,
             phone: user.phone,
-            citizenshipNo: user.citizenshipNo,
+            citizenshipNo: user.citizenship_No,
             roomId: allocation ? allocation.roomId : 'Not allocated',
-            firstName: user.firstName,
-            middleName : user.middleName,
-            lastName: user.lastName,
+            firstName: user.first_Name,
+            middleName : user.middle_Name,
+            lastName: user.last_Name,
             dateOfBirth: user.dateOfBirth,
             email: user.email
         };
@@ -169,7 +169,7 @@ exports.updateResident = async (req, res) => {
 exports.deleteResident = async (req, res) => {
     try {
         // Check if the user is authorized to perform this action
-        if (req.user.role !== 'Admin') {
+        if (req.user.role == 'Admin') {
             return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
         }
 
