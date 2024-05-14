@@ -108,7 +108,7 @@ exports.changeJobStatus = async (req, res) => {
         // if job status is Pending, change to Done
         if (maintenance.jobStatus === 'Pending' ) {
             maintenance.jobStatus = 'Done';
-            res.status(200).json({ message: 'Job status' });
+            res.status(200).json({ message: 'Job status updated successfully' });
         } else {
             res.status(200).json({ message: 'Job is already done' });
         }
