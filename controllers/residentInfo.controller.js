@@ -169,7 +169,7 @@ exports.updateResident = async (req, res) => {
 exports.deleteResident = async (req, res) => {
     try {
         // Check if the user is authorized to perform this action
-        if (req.user.role == 'Admin') {
+        if (req.user.role !== 'Admin') {
             return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
         }
 
