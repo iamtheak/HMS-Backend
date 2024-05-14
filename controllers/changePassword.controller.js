@@ -29,7 +29,7 @@ exports.changePassword = async (req, res) => {
 
     // Check if the old password matches
     if (oldPassword !== user.password) {
-      return res.status(400).json({ message: "Old password is incorrect"});
+      return res.status(400).json({ message: "password is incorrect"});
     }
 
     // Update user's password
