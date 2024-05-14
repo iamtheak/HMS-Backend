@@ -63,8 +63,19 @@ exports.getSingleResidentInfo = async (req, res) => {
         }
 
         const allocation = await Allocation.findOne({ username });
+        const residentInfo = {
+            username: user.user_name,
+            phone: user.phone,
+            citizenshipNo: user.citizenship_No,
+            roomId: allocation ? allocation.roomId : 'Not allocated',
+            firstName: user.first_Name,
+            middleName : user.middle_Name,
+            lastName: user.last_Name,
+            dateOfBirth: user.dateOfBirth,
+            email: user.email
+        };
 
-        res.json({ message: 'Resident information retrieved successfully'});
+        res.json({ message: 'Resident information retrieved successfully', residentInfo });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
