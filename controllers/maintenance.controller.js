@@ -14,7 +14,7 @@ exports.getAllMaintenance = async (req, res) => {
             if (!maintenanceDetails) {
                 return res.status(404).json({ message: 'Maintenance not found' });
             }
-            res.json({ message: 'Maintenance details retrieved successfully', maintenanceDetails });
+            res.json({ message: 'Maintenance tasks retrieved successfully', maintenanceDetails });
         } else if (req.query.staffId) {
             // fetch maintenance tasks of a single staff by staffId 
             if (req.user.role !== 'Admin') {
@@ -25,7 +25,7 @@ exports.getAllMaintenance = async (req, res) => {
             if (!maintenanceDetails || maintenanceDetails.length === 0) {
                 return res.status(404).json({ message: 'Maintenance not found' });
             }
-            res.json({ message: 'Maintenance details retrieved successfully', maintenanceDetails });
+            res.json({ message: 'Maintenance taks retrieved successfully', maintenanceDetails });
         } else {
             // fetch all assigned maintenance tasks from the database
             if (req.user.role !== 'Admin') {
@@ -33,7 +33,7 @@ exports.getAllMaintenance = async (req, res) => {
             }
 
             const maintenanceDetails = await Maintenance.find({}, 'maintenanceId staffId staffName task jobStatus');
-            res.json({ message: 'All maintenance tasks', maintenanceDetails });
+            res.json({ message: 'All maintenance tasks retrieved successfully', maintenanceDetails });
         }
     } 
     catch (error) {
@@ -108,7 +108,7 @@ exports.changeJobStatus = async (req, res) => {
         // if job status is Pending, change to Done
         if (maintenance.jobStatus === 'Pending' ) {
             maintenance.jobStatus = 'Done';
-            res.status(200).json({ message: 'Job status updated successfully' });
+            res.status(200).json({ message: 'Job status' });
         } else {
             res.status(200).json({ message: 'Job is already done' });
         }

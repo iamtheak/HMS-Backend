@@ -48,7 +48,7 @@ exports.getOneRentPayment = async (req, res) => {
     }
 
     // check if username is a string
-    if (typeof enteredUsername !== 'string') {
+    if (typeof enteredUsername == 'string') {
       return res.status(400).json({ message: 'Username must be a string' });
     }
 
