@@ -63,6 +63,16 @@ exports.allocateRoom = async (req, res) => {
             return res.status(400).json({ message: 'Only Resident can be allocated to a room' });
         }
 
+         // Check room occupancy
+        const allocatedRoomsCount = await Allocation.countDocuments({ roomId });
+        const roomOccupancy = roomExists.occupancy;
+
+        if (allocatedRoomsCount >= roomOccupancy) {
+            return res.status(400).json({
+                message: `Room occupancy reached its limit. Cannot allocate more users to this room.`,
+            });
+        }
+
         // Allocate the room to the user
         const allocation = new Allocation({ username, roomId });
         await allocation.save();
