@@ -1,4 +1,5 @@
 const Room = require('../models/rooms');
+const Allocation = require('../models/allocateRoom.model');
 
 // Controller actions
 exports.getAllRooms = async (req, res) => {
@@ -104,8 +105,14 @@ exports.deleteRoom = async (req, res) => {
         if (!room) {
             return res.status(404).json({ message: 'Room not found' });
         }
-        await Room.findByIdAndDelete(room._id);
-        res.json({ message: 'Room deleted successfully' });
+
+        // Delete allocations associated with the room
+        await Allocation.deleteMany({ roomId: room.roomId });
+
+        // Delete the room
+        await Room.deleteOne({ roomId: req.params.roomId });
+
+        res.json({ message: 'Room and associated allocations deleted successfully' });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
