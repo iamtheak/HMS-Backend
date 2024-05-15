@@ -1,3 +1,4 @@
+const Feedback = require('../models/feedback');
 const Allocation = require('../models/allocateRoom.model');
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
@@ -187,6 +188,9 @@ exports.deleteResident = async (req, res) => {
 
         // Delete allocated rooms for the deleted resident
         await Allocation.deleteMany({ username });
+
+        // Delete feedback sent by the deleted resident
+        await Feedback.deleteMany({ residentUsername: username });
 
         // Return success message
         res.json({ message: 'Resident deleted successfully'});
