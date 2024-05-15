@@ -17,8 +17,8 @@ exports.getAllMaintenance = async (req, res) => {
             res.json({ message: 'Maintenance tasks retrieved successfully', maintenanceDetails });
         } else if (req.query.staffId) {
             // fetch maintenance tasks of a single staff by staffId 
-            if (req.user.role !== 'Admin') {
-                return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
+            if (req.user.role !== 'Admin' && req.user.role !== 'Staff') {
+                return res.status(403).json({ message: 'Unauthorized. Only Admin and Staff can perform this action' });
             }
 
             const maintenanceDetails = await Maintenance.find({ staffId: parseInt(req.query.staffId) }, 'maintenanceId staffId staffName task jobStatus');
@@ -55,13 +55,14 @@ exports.assignMaintenance = async (req, res) => {
         let newMaintenanceId;
 
         if (!maintenanceId) {
+            // create new maintenanceId if not provided
             const nextMaintenanceId = await Maintenance.getNextMaintenanceId();
             newMaintenanceId = nextMaintenanceId;
         } else {
             newMaintenanceId = parseInt(maintenanceId);
         }
 
-        // fetch staff details by staffId
+        // find staff details by staffId
         const staff = await Staff.findOne({ staffId });
 
         // check if staff with the provided staffId exists
@@ -80,6 +81,7 @@ exports.assignMaintenance = async (req, res) => {
             jobStatus: "Pending"
         });
 
+        // save the new maintenance task
         const newMaintenance = await maintenance.save();
         res.status(201).json({ message: 'Maintenance task assigned successfully', maintenance: newMaintenance });
     } catch (err) {
@@ -97,7 +99,7 @@ exports.changeJobStatus = async (req, res) => {
         const maintenanceId = req.body.maintenanceId;
         console.log(maintenanceId);
     
-        // find the staff by staffId
+        // find the maintenanxe by maintenanceId
         const maintenance = await Maintenance.findOne({maintenanceId: maintenanceId});
     
         if (!maintenance) {
@@ -162,7 +164,7 @@ exports.reassignMaintenance = async (req, res) => {
             maintenance.task = req.body.task;
         }
 
-        // Save the updated maintenance task
+        // save the updated maintenance task
         const updatedMaintenance = await maintenance.save();
         res.json({ message: 'Maintenance Task updated successfully', maintenance: updatedMaintenance });
     } catch (err) {
