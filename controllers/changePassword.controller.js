@@ -5,7 +5,7 @@ exports.changePassword = async (req, res) => {
     const { username } = req.user;
     const { oldPassword, newPassword, confirmPassword } = req.body;
 
-    // Check if the old password matches
+    // Check if the old password matches with new password
     if (oldPassword === newPassword) {
       return res.status(400).json({ message: "New password must be different from the old password"});
     }
