@@ -64,13 +64,13 @@ exports.getSingleResidentInfo = async (req, res) => {
 
         const allocation = await Allocation.findOne({ username });
         const residentInfo = {
-            username: user.user_name,
+            username: user.username,
             phone: user.phone,
-            citizenshipNo: user.citizenship_No,
+            citizenshipNo: user.citizenshipNo,
             roomId: allocation ? allocation.roomId : 'Not allocated',
-            firstName: user.first_Name,
-            middleName : user.middle_Name,
-            lastName: user.last_Name,
+            firstName: user.firstName,
+            middleName : user.middleName,
+            lastName: user.lastName,
             dateOfBirth: user.dateOfBirth,
             email: user.email
         };
