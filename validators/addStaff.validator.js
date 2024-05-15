@@ -132,6 +132,10 @@ const createStaffSchema = checkSchema({
     isNumeric: {
       errorMessage: 'Salary amount must be a number',
     },
+    isFloat: {
+      errorMessage: 'Salary amount must be at least 10,000 and at most 1,00,00,000',
+      options: { min: 10000, max: 10000000 },
+    },
   },
 });
 
