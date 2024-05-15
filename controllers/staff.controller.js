@@ -1,11 +1,14 @@
 const Staff = require('../models/staffs');
+const Maintenance = require('../models/maintenance')
 
 // Controller action to retrieve all staffs
 exports.getAllStaffs = async (req, res) => {
+    // check if the user is an Admin
     try {
         if (req.user.role !== 'Admin') {
             return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
         }
+        // retrieve all staffs with role "Staff"
         const staffs = await Staff.find({ role: "Staff" });
         res.json({ message: "All Staffs", staffs: staffs });
     } catch (err) {
@@ -17,6 +20,7 @@ exports.getAllStaffs = async (req, res) => {
 // Controller action to retrieve a single staff by staffID
 exports.getOneStaff = async (req, res) => {
     try {
+        // check if the user is an Admin or Staff
         if (req.user.role !== 'Admin' && req.user.role !== 'Staff') {
             return res.status(403).json({ message: 'Unauthorized. Only Admin and Staff can perform this action' });
         }
@@ -52,6 +56,7 @@ exports.addStaff = async (req, res) => {
     const { username, staffId, firstName, middleName, lastName, email, phone, citizenshipNo, password, amount } = req.body;
 
     try {
+        // check if the user is an Admin
         if (req.user.role !== 'Admin') {
             return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
         }
@@ -59,11 +64,11 @@ exports.addStaff = async (req, res) => {
         let newStaffId;
 
         if (!staffId) {
-            // If staffId is not provided, get the next available staffId
+            // if staffId is not provided, get the next available staffId
             const nextStaffId = await Staff.getNextStaffId();
             newStaffId = nextStaffId;
         } else {
-            // If staffId is provided, check if it already exists
+            // if staffId is provided, check if it already exists
             const existingStaff = await Staff.findOne({ staffId });
             console.log(existingStaff);
             
@@ -77,7 +82,7 @@ exports.addStaff = async (req, res) => {
         const joinedDate = new Date(); // current date
         const nextPayDate = new Date(joinedDate.getFullYear(), joinedDate.getMonth() + 1, joinedDate.getDate());
 
-        // Create a new staff
+        // create a new staff
         const staff = new Staff({
             username,
             staffId: newStaffId,
@@ -108,6 +113,7 @@ exports.addStaff = async (req, res) => {
 // Controller action to update staff details
 exports.updateStaff = async (req, res) => {
     try {
+        // check if the user is an Admin
         if (req.user.role !== 'Admin') {
             return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
         }
@@ -156,7 +162,7 @@ exports.updateStaff = async (req, res) => {
             staff.billing.amount = req.body.amount;
         }
 
-        // Save the updated staff
+        // save the updated staff
         const updatedStaff = await staff.save();
         res.json({ message: 'Staff updated successfully', staff: updatedStaff });
     } catch (err) {
@@ -168,6 +174,7 @@ exports.updateStaff = async (req, res) => {
 // Controller action to delete a staff by staffID
 exports.deleteStaff = async (req, res) => {
     try {
+        // check if the user is an Admin
         if (req.user.role !== 'Admin') {
             return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
         }
@@ -189,6 +196,9 @@ exports.deleteStaff = async (req, res) => {
         if (!staff) {
             return res.status(404).json({ message: 'Staff not found' });
         }
+
+        // delete the maintenance tasks assigned to the staff
+        await Maintenance.deleteMany({ staffId: parseInt(staffId) });
 
         // delete the staff
         const result = await Staff.deleteOne({ staffId: parseInt(staffId) });
