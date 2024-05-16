@@ -36,7 +36,7 @@ const updateStaffSchema = checkSchema({
         },
     },
     middleName: {
-        optional: true,
+        optional: { options: { nullable: true } },
         // starts with a capital letter followed by lowercase letters
         matches: {
             options: [/^[A-Z][a-z]*$/],
