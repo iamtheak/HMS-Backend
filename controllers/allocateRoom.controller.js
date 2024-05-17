@@ -165,7 +165,7 @@ exports.deleteAllocateRoom = async (req, res) => {
         await user.save();
 
         // Reset the room price to null
-        const room = await Room.findOneAndUpdate({ roomId: allocation.roomId }, { price: null });
+        const room = await Room.findOneAndUpdate({ roomId: allocation.roomId });
 
         res.status(200).json({ message: 'Allocation deleted successfully' });
     } catch (err) {
