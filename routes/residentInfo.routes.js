@@ -105,7 +105,7 @@ router.get("/residentInfo/:username", residentController.getSingleResidentInfo);
  *       '500':
  *         description: Internal server error
  */
-router.put("/residentInfo/:username", jwtAuthMiddleware, residentController.updateResident);
+router.put("/residentInfo/:username", jwtAuthMiddleware, updateResidentValidator ,residentController.updateResident);
 
 /**
  * @swagger
