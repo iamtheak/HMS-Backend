@@ -16,14 +16,18 @@ const updateResidentSchema = checkSchema({
     },
     middleName: {
         optional: true,
-        // starts with a capital letter followed by lowercase letters
-        matches: {
-            options: [/^[A-Z][a-z]*$/],
-            errorMessage: 'Middle name must start with a capital letter followed by small letters',
-        },
-        isLength: {
-            options: { max: 20 },
-            errorMessage: 'Middle name must not be longer than 20 characters',
+        custom: {
+            options: (value) => {
+                if (value) {
+                    if (!/^[A-Z][a-z]*$/.test(value)) {
+                        throw new Error('Middle name must start with a capital letter followed by small letters');
+                    }
+                    if (value.length > 20) {
+                        throw new Error('Middle name must not be longer than 20 characters');
+                    }
+                }
+                return true;
+            },
         },
     },
     lastName: {
