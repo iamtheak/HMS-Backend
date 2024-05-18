@@ -106,6 +106,6 @@ router.post('/feedback', jwtAuthMiddleware, feedbackValidator.validateFeedback, 
  *         description: Internal server error
  */
 
-router.post('/feedback/respond', jwtAuthMiddleware, feedbackController.respondToFeedback);
+router.post('/feedback/respond', jwtAuthMiddleware, feedbackValidator.validateAdminResponse, feedbackController.respondToFeedback);
 
 module.exports = router;

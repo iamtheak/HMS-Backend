@@ -65,6 +65,12 @@ exports.respondToFeedback = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Feedback not found' });
         }
 
+        // Validate the response
+        if (!response || response.trim().length === 0) {
+            return res.status(400).json({ success: false, message: 'Response message cannot be empty' });
+        }
+
+
         feedback.adminResponse = response;
         await feedback.save();
 
