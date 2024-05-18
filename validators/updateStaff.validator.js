@@ -105,9 +105,7 @@ const updateStaffSchema = checkSchema({
         },
     },
     amount: {
-        notEmpty: {
-          errorMessage: 'Salary amount is required',
-        },
+        optional: true,
         isNumeric: {
           errorMessage: 'Salary amount must be a number',
         },

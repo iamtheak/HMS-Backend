@@ -20,11 +20,6 @@ exports.getAllStaffs = async (req, res) => {
 // Controller action to retrieve a single staff by staffID
 exports.getOneStaff = async (req, res) => {
     try {
-        // check if the user is an Admin or Staff
-        if (req.user.role !== 'Admin' && req.user.role !== 'Staff') {
-            return res.status(403).json({ message: 'Unauthorized. Only Admin and Staff can perform this action' });
-        }
-        
         const staffId = req.params.staffId;
 
         // check if staffId is entered
@@ -35,6 +30,11 @@ exports.getOneStaff = async (req, res) => {
         // check if staffId is a valid number
         if (isNaN(parseInt(staffId))) {
             return res.status(400).json({ message: 'Invalid Staff ID' });
+        }
+
+        // check if the user is an Admin or Staff
+        if (req.user.role !== 'Admin' && req.user.staffId !== parseInt(staffId)) {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin or the staff member themselves can perform this action' });
         }
 
         // retrieve a single staff by ID
@@ -113,12 +113,7 @@ exports.addStaff = async (req, res) => {
 // Controller action to update staff details
 exports.updateStaff = async (req, res) => {
     try {
-        // check if the user is an Admin
-        if (req.user.role !== 'Admin') {
-            return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
-        }
-
-        const staffId = req.params.staffId;
+       const staffId = req.params.staffId;
 
         // check if staffId is entered
         if (!staffId) {
@@ -136,30 +131,61 @@ exports.updateStaff = async (req, res) => {
             return res.status(404).json({ message: 'Staff not found' });
         }
 
+        // Check if the user is an Admin or the staff member themselves
+        if (req.user.role !== 'Admin' && req.user.staffId !== parseInt(staffId)) {
+            return res.status(403).json({ message: 'Unauthorized. Only Admin or the staff member themselves can perform this action' });
+        }
+
         // update staff details
-        if (req.body.username != null) {
-            staff.username = req.body.username;
-        }
-        if (req.body.firstName != null) {
-            staff.firstName = req.body.firstName;
-        }
-        if (req.body.middleName != null) {
-            staff.middleName = req.body.middleName;
-        }
-        if (req.body.lastName != null) {
-            staff.lastName = req.body.lastName;
-        }
-        if (req.body.email != null) {
-            staff.email = req.body.email;
-        }
-        if (req.body.phone != null) {
-            staff.phone = req.body.phone;
-        }
-        if (req.body.citizenshipNo != null) {
-            staff.citizenshipNo = req.body.citizenshipNo;
-        }
-        if (req.body.amount != null) {
-            staff.billing.amount = req.body.amount;
+        if (req.user.role === 'Admin') {
+            // if the user is admin
+            if (req.body.username != null) {
+                staff.username = req.body.username;
+            }
+            if (req.body.firstName != null) {
+                staff.firstName = req.body.firstName;
+            }
+            if (req.body.middleName != null) {
+                staff.middleName = req.body.middleName;
+            }
+            if (req.body.lastName != null) {
+                staff.lastName = req.body.lastName;
+            }
+            if (req.body.email != null) {
+                staff.email = req.body.email;
+            }
+            if (req.body.phone != null) {
+                staff.phone = req.body.phone;
+            }
+            if (req.body.citizenshipNo != null) {
+                staff.citizenshipNo = req.body.citizenshipNo;
+            }
+            if (req.body.amount != null) {
+                staff.billing.amount = req.body.amount;
+            }
+        } else {
+            // if the user is admin
+            if (req.body.username != null) {
+                staff.username = req.body.username;
+            }
+            if (req.body.firstName != null) {
+                staff.firstName = req.body.firstName;
+            }
+            if (req.body.middleName != null) {
+                staff.middleName = req.body.middleName;
+            }
+            if (req.body.lastName != null) {
+                staff.lastName = req.body.lastName;
+            }
+            if (req.body.email != null) {
+                staff.email = req.body.email;
+            }
+            if (req.body.phone != null) {
+                staff.phone = req.body.phone;
+            }
+            if (req.body.citizenshipNo != null) {
+                staff.citizenshipNo = req.body.citizenshipNo;
+            }
         }
 
         // save the updated staff
