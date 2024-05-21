@@ -1,5 +1,6 @@
 const User = require('../models/users');
 const Staff = require('../models/staffs');
+const Allocations = require('../models/allocateRoom.model');
 
 // Controller function to fetch rent payment details
 exports.getRentPayments = async (req, res) => {
@@ -174,6 +175,12 @@ exports.postRentPaymentStatus = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
+    }
+
+    // check if the user has a room allocated
+    const allocation = await Allocations.findOne({ username: username });
+    if (!allocation) {
+      return res.status(400).json({ error: 'Room is not allocated for the user.' });
     }
 
     // add the amount and today's date as paidDate to pastBills
