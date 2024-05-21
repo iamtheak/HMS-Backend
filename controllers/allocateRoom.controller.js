@@ -153,19 +153,15 @@ exports.deleteAllocateRoom = async (req, res) => {
             return res.status(400).json({ message: 'User is not allocated to any room. No action taken.' });
         }
         
-        // Retrieve the room price before deleting
+        // Retrieve the user before deleting the allocation
         const user = await User.findOne({ username });
-        const roomPrice = user.billing.amount;
 
         // Delete allocation for the user
         await Allocation.deleteOne({ username });
 
-        // Reset the user's amount field within the billing object to its default value
+        // Reset the user's billing amount to null
         user.billing.amount = null;
         await user.save();
-
-        // Reset the room price to null
-        const room = await Room.findOneAndUpdate({ roomId: allocation.roomId });
 
         res.status(200).json({ message: 'Allocation deleted successfully' });
     } catch (err) {

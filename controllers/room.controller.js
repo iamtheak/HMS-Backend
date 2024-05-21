@@ -1,4 +1,5 @@
 const Room = require('../models/rooms');
+const User = require('../models/users');
 const Allocation = require('../models/allocateRoom.model');
 
 // Controller actions
@@ -97,16 +98,30 @@ exports.updateRoom = async (req, res) => {
 
 exports.deleteRoom = async (req, res) => {
     try {
+        // Check if the user is an Admin
         if (req.user.role !== 'Admin') {
             return res.status(403).json({ message: 'Unauthorized. Only Admin can perform this action' });
         }
 
+        // Find the room by roomId
         const room = await Room.findOne({ roomId: req.params.roomId });
         if (!room) {
             return res.status(404).json({ message: 'Room not found' });
         }
 
-        // Delete allocations associated with the room
+        // Find all allocations for the room
+        const allocations = await Allocation.find({ roomId: room.roomId });
+
+        // For each allocation, set the user's billing amount to null
+        for (const allocation of allocations) {
+            const user = await User.findOne({ username: allocation.username });
+            if (user) {
+                user.billing.amount = null;
+                await user.save();
+            }
+        }
+
+        // Delete all allocations for the room
         await Allocation.deleteMany({ roomId: room.roomId });
 
         // Delete the room
