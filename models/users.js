@@ -160,7 +160,8 @@ async function insertAdminDetail() {
         phone: 9876543210,
         citizenshipNo: "12-345-6789",
         password: "admin123",
-        dateOfBirth: "2000-01-01"
+        dateOfBirth: "2000-01-01",
+        joinedDate: new Date()
       });
       await admin.save();
       console.log("Admin detail inserted successfully.");
